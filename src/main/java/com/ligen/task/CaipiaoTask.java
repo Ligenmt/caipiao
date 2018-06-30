@@ -48,7 +48,7 @@ public class CaipiaoTask {
         try {
             String str = HttpInstance.create().doGet(ynwfcUrl, null, 10);
             saveData(str, "ynwfc", sdf);
-            logger.debug("ynwfc updated");
+            logger.info("ynwfc updated");
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("ynwfc error");
@@ -61,7 +61,7 @@ public class CaipiaoTask {
         try {
             String str = HttpInstance.create().doGet(ynffcUrl, null, 10);
             saveData(str, "ynffc", sdf);
-            logger.debug("ynffc updated");
+            logger.info("ynffc updated");
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("ynffc error");
@@ -74,7 +74,7 @@ public class CaipiaoTask {
         try {
             String str = HttpInstance.create().doGet(cqsscUrl, null, 10);
             saveData(str, "cqssc", sdf);
-            logger.debug("cqssc updated");
+            logger.info("cqssc updated");
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("cqssc error");
