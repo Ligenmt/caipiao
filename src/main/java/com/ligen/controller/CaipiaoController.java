@@ -129,6 +129,9 @@ public class CaipiaoController {
     @RequestMapping(value = "order_tail", method = RequestMethod.POST)
     @ResponseBody
     public String orderTailPost() {
+
+
+
         return "order_tail";
     }
 }
