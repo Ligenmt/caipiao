@@ -261,4 +261,42 @@ public class CaipiaoService {
         }
         return sb.toString();
     }
+
+
+    public String orderTail(int index, String first, String second, String third) {
+
+        Query query = new Query();
+        query.with(new Sort(Sort.Direction.DESC, "_id")).limit(2000);
+        List<JSONObject> recentNumbers = mongoTemplate.find(query, JSONObject.class, "cqssc");
+
+        StringBuilder sb = new StringBuilder();
+        for (int i=0; i<recentNumbers.size() - 2; i++) {
+            String numbers = recentNumbers.get(i).getString("result");
+            String saved1 = numbers.substring(index, index + 1);
+
+            String numbers2 = recentNumbers.get(i + 1).getString("result");
+            String saved2 = numbers2.substring(index, index + 1);
+
+            String numbers3 = recentNumbers.get(i + 2).getString("result");
+            String saved3 = numbers3.substring(index, index + 1);
+
+            if (saved1.equals(first) && saved2.equals(second) && saved3.equals(third)) {
+                if (i + 3 < recentNumbers.size()) {
+                    String numbers4 = recentNumbers.get(i + 3).getString("result");
+                    String saved4 = numbers4.substring(index, index + 1);
+
+                    String no1 = recentNumbers.get(i).getString("no");
+                    String no2 = recentNumbers.get(i + 1).getString("no");
+                    String no3 = recentNumbers.get(i + 2).getString("no");
+                    String no4 = recentNumbers.get(i + 3).getString("no");
+                    sb.append("<p>期数:").append(no1).append(" 号码:").append(saved1).append("</p>");
+                    sb.append("<p>期数:").append(no2).append(" 号码:").append(saved2).append("</p>");
+                    sb.append("<p>期数:").append(no3).append(" 号码:").append(saved3).append("</p>");
+                    sb.append("<p>期数:").append(no4).append(" 号码:").append(saved4).append("</p>");
+                    sb.append("<p>------------------------------------------------</p>");
+                }
+            }
+        }
+        return sb.toString();
+    }
 }

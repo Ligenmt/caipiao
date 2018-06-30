@@ -128,10 +128,12 @@ public class CaipiaoController {
 
     @RequestMapping(value = "order_tail", method = RequestMethod.POST)
     @ResponseBody
-    public String orderTailPost() {
+    public String orderTailPost(@RequestParam(value = "index") int index,
+                                @RequestParam(value = "first") String first,
+                                @RequestParam(value = "second") String second,
+                                @RequestParam(value = "third") String third) {
 
-
-
-        return "order_tail";
+        String result = caipiaoService.orderTail(index, first, second, third);
+        return result;
     }
 }
