@@ -266,7 +266,7 @@ public class CaipiaoService {
     public String orderTail(int index, String first, String second, String third, String fourth) {
 
         Query query = new Query();
-        query.with(new Sort(Sort.Direction.DESC, "_id")).limit(2000);
+        query.with(new Sort(Sort.Direction.DESC, "_id")).limit(5000);
         List<JSONObject> recentNumbers = mongoTemplate.find(query, JSONObject.class, "cqssc");
 
         StringBuilder sb = new StringBuilder();
@@ -292,10 +292,12 @@ public class CaipiaoService {
                     String no1 = recentNumbers.get(i).getString("no");
                     String no2 = recentNumbers.get(i + 1).getString("no");
                     String no3 = recentNumbers.get(i + 2).getString("no");
+                    String no4 = recentNumbers.get(i + 3).getString("no");
                     sb.append("<p>期数:").append(no5).append(" 号码:").append(saved5).append("</p>");
                     sb.append("<p>期数:").append(no1).append(" 号码:").append(saved1).append("</p>");
                     sb.append("<p>期数:").append(no2).append(" 号码:").append(saved2).append("</p>");
                     sb.append("<p>期数:").append(no3).append(" 号码:").append(saved3).append("</p>");
+                    sb.append("<p>期数:").append(no4).append(" 号码:").append(saved4).append("</p>");
                     sb.append("<p>------------------------------------------------</p>");
                 }
             }
