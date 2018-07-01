@@ -131,9 +131,10 @@ public class CaipiaoController {
     public String orderTailPost(@RequestParam(value = "index") int index,
                                 @RequestParam(value = "first") String first,
                                 @RequestParam(value = "second") String second,
-                                @RequestParam(value = "third") String third) {
+                                @RequestParam(value = "third") String third,
+                                @RequestParam(value = "fourth") String fourth) {
 
-        String result = caipiaoService.orderTail(index, first, second, third);
+        String result = caipiaoService.orderTail(index, first, second, third, fourth);
         return result;
     }
 }
