@@ -281,7 +281,7 @@ public class CaipiaoService {
             String saved3 = numbers3.substring(index, index + 1);
 
             String numbers4 = recentNumbers.get(i + 3).getString("result");
-            String saved4 = numbers3.substring(index, index + 1);
+            String saved4 = numbers4.substring(index, index + 1);
 
             if (saved1.equals(first) && saved2.equals(second) && saved3.equals(third) && saved4.equals(fourth)) {
                 if (i - 1 >= 0) {
