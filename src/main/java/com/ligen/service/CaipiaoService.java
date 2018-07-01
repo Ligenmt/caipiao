@@ -281,18 +281,18 @@ public class CaipiaoService {
             String saved3 = numbers3.substring(index, index + 1);
 
             if (saved1.equals(first) && saved2.equals(second) && saved3.equals(third)) {
-                if (i + 3 < recentNumbers.size()) {
-                    String numbers4 = recentNumbers.get(i + 3).getString("result");
+                if (i - 1 >= 0) {
+                    String numbers4 = recentNumbers.get(i - 1).getString("result");
                     String saved4 = numbers4.substring(index, index + 1);
+                    String no4 = recentNumbers.get(i - 1).getString("no");
 
                     String no1 = recentNumbers.get(i).getString("no");
                     String no2 = recentNumbers.get(i + 1).getString("no");
                     String no3 = recentNumbers.get(i + 2).getString("no");
-                    String no4 = recentNumbers.get(i + 3).getString("no");
+                    sb.append("<p>期数:").append(no4).append(" 号码:").append(saved4).append("</p>");
                     sb.append("<p>期数:").append(no1).append(" 号码:").append(saved1).append("</p>");
                     sb.append("<p>期数:").append(no2).append(" 号码:").append(saved2).append("</p>");
                     sb.append("<p>期数:").append(no3).append(" 号码:").append(saved3).append("</p>");
-                    sb.append("<p>期数:").append(no4).append(" 号码:").append(saved4).append("</p>");
                     sb.append("<p>------------------------------------------------</p>");
                 }
             }
