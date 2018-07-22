@@ -137,4 +137,18 @@ public class CaipiaoController {
         String result = caipiaoService.orderTail(index, first, second, third, fourth);
         return result;
     }
+
+    @RequestMapping(value = "qishu_intertval", method = RequestMethod.GET)
+    public String qishuIntervalGet() {
+        return "qishu_intertval";
+    }
+
+    @RequestMapping(value = "qishu_intertval", method = RequestMethod.POST)
+    @ResponseBody
+    public String qishuIntervalPost(@RequestParam(value = "interval") int interval,
+                                @RequestParam(value = "qishu") String qishu) {
+
+        String result = caipiaoService.qishuInterval(interval, qishu);
+        return result;
+    }
 }

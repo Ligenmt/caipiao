@@ -1,6 +1,11 @@
 package com.ligen.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -299,6 +304,40 @@ public class CaipiaoService {
                     sb.append("<p>期数:").append(no3).append(" 号码:").append(saved3).append("</p>");
                     sb.append("<p>期数:").append(no4).append(" 号码:").append(saved4).append("</p>");
                     sb.append("<p>------------------------------------------------</p>");
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    public String qishuInterval(int interval, String qishu) {
+
+//        MongoCollection<Document> cqssc = mongoTemplate.getCollection("cqssc");
+//        FindIterable<Document> findIterable = cqssc.find(new Document("", ""));
+//        MongoCursor<Document> iterator = findIterable.iterator();
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("no").is(qishu));
+        if (!mongoTemplate.exists(query, "cqssc")) {
+            return "";
+        }
+        int totalCount = interval * 51;
+        query = new Query();
+        query.addCriteria(Criteria.where("no").lte(qishu));
+        query.fields().include("no").include("result");
+        query.with(new Sort(Sort.Direction.DESC, "no")).limit(totalCount);
+        List<JSONObject> cqssc = mongoTemplate.find(query, JSONObject.class, "cqssc");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(cqssc.get(0).getString("result")).append(" ");
+        int count = 0;
+        for (int i = 1; i < cqssc.size(); i++) {
+            if (i % interval == 0) {
+                sb.append(cqssc.get(i).getString("result")).append(" ");
+                count += 1;
+                logger.info("qishuInterval no:{}, result:{}", cqssc.get(i).getString("no"), cqssc.get(i).getString("result"));
+                if (count == 50) {
+                    break;
                 }
             }
         }
