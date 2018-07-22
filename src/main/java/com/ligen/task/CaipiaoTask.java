@@ -68,7 +68,7 @@ public class CaipiaoTask {
         }
     }
 
-    @Scheduled(cron="0 0/10 * * * ?")
+    @Scheduled(cron="0 0/5 * * * ?")
     public void 重庆时时彩() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
