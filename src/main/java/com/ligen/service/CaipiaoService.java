@@ -333,11 +333,11 @@ public class CaipiaoService {
         List<JSONObject> cqssc = mongoTemplate.find(query, JSONObject.class, "cqssc");
 
         StringBuilder sb = new StringBuilder();
-        sb.append(cqssc.get(0).getString("result")).append(" ");
+        sb.append("<p>").append(cqssc.get(0).getString("no")).append(" ").append(cqssc.get(0).getString("result")).append("</p>");
         int count = 0;
         for (int i = 1; i < cqssc.size(); i++) {
             if (i % interval == 0) {
-                sb.append(cqssc.get(i).getString("result")).append(" ");
+                sb.append("<p>").append(cqssc.get(i).getString("no")).append(" ").append(cqssc.get(i).getString("result")).append("</p>");
                 count += 1;
                 logger.info("qishuInterval no:{}, result:{}", cqssc.get(i).getString("no"), cqssc.get(i).getString("result"));
                 if (count == 50) {
