@@ -267,51 +267,88 @@ public class CaipiaoService {
         return sb.toString();
     }
 
-
-    public String orderTail(int index, String first, String second, String third, Integer count) {
+    /**
+     * @param index  第几个位置
+     * @param code  要排序的号码序列
+     * @param count
+     * @return
+     */
+    public String orderTail(int index, String code, Integer count) {
 
         if (count == null) {
             count = 5000;
         }
+        int length = code.length(); //数列有几个数
+        char[] chars = code.toCharArray();
 
         Query query = new Query();
         query.with(new Sort(Sort.Direction.DESC, "_id")).limit(count);
         List<JSONObject> recentNumbers = mongoTemplate.find(query, JSONObject.class, "cqssc");
-
         StringBuilder sb = new StringBuilder();
-        for (int i=0; i<recentNumbers.size() - 3; i++) {
-            String numbers = recentNumbers.get(i).getString("result");
-            String saved1 = numbers.substring(index, index + 1);
-
-            String numbers2 = recentNumbers.get(i + 1).getString("result");
-            String saved2 = numbers2.substring(index, index + 1);
-
-            String numbers3 = recentNumbers.get(i + 2).getString("result");
-            String saved3 = numbers3.substring(index, index + 1);
-
-//            String numbers4 = recentNumbers.get(i + 3).getString("result");
-//            String saved4 = numbers4.substring(index, index + 1);
-
-            if (saved1.equals(first) && saved2.equals(second) && saved3.equals(third)) {
-                if (i - 1 >= 0) {
-                    String numbers5 = recentNumbers.get(i - 1).getString("result");
-                    String saved5 = numbers5.substring(index, index + 1);
-                    String no5 = recentNumbers.get(i - 1).getString("no");
-
-                    String no1 = recentNumbers.get(i).getString("no");
-                    String no2 = recentNumbers.get(i + 1).getString("no");
-                    String no3 = recentNumbers.get(i + 2).getString("no");
-//                    String no4 = recentNumbers.get(i + 3).getString("no");
-                    sb.append("<p>期数:").append(no5).append(" 号码:").append(saved5).append("</p>");
-                    sb.append("<p>期数:").append(no1).append(" 号码:").append(saved1).append("</p>");
-                    sb.append("<p>期数:").append(no2).append(" 号码:").append(saved2).append("</p>");
-                    sb.append("<p>期数:").append(no3).append(" 号码:").append(saved3).append("</p>");
-//                    sb.append("<p>期数:").append(no4).append(" 号码:").append(saved4).append("</p>");
-                    sb.append("<p>------------------------------------------------</p>");
+        for (int i=0; i<recentNumbers.size() - (length - 1); i++) {
+            char[] savedNumbers = new char[length];
+            for (int j=0; j<length; j++) {
+                String numbers = recentNumbers.get(i+j).getString("result");
+                char[] saved = numbers.substring(index, index + 1).toCharArray();
+                savedNumbers[j] = saved[0];
+            }
+            //比较每个位置的数
+            boolean same = true;
+            for (int j=0; j<length; j++) {
+                if (savedNumbers[j] != chars[j]) {
+                    same = false;
+                    break;
                 }
             }
+            if (same && i >= 1) {
+                String numbersTarget = recentNumbers.get(i - 1).getString("result");
+                String savedTarget = numbersTarget.substring(index, index + 1);
+                String noTarget = recentNumbers.get(i - 1).getString("no");
+                sb.append("<p>期数:").append(noTarget).append(" 号码:").append(savedTarget).append("</p>");
+                for (int j=0; j<length; j++) {
+                    String no1 = recentNumbers.get(i + j).getString("no");
+                    sb.append("<p>期数:").append(no1).append(" 号码:").append(savedNumbers[j]).append("</p>");
+                }
+                sb.append("<p>------------------------------------------------</p>");
+            }
+
         }
         return sb.toString();
+
+
+//        for (int i=0; i<recentNumbers.size() - 3; i++) {
+//            String numbers1 = recentNumbers.get(i).getString("result");
+//            String saved1 = numbers1.substring(index, index + 1);
+//
+//            String numbers2 = recentNumbers.get(i + 1).getString("result");
+//            String saved2 = numbers2.substring(index, index + 1);
+//
+//            String numbers3 = recentNumbers.get(i + 2).getString("result");
+//            String saved3 = numbers3.substring(index, index + 1);
+//
+////            String numbers4 = recentNumbers.get(i + 3).getString("result");
+////            String saved4 = numbers4.substring(index, index + 1);
+//
+//            if (saved1.equals(first) && saved2.equals(second) && saved3.equals(third)) {
+//                if (i - 1 >= 0) {
+//                    String numbers5 = recentNumbers.get(i - 1).getString("result");
+//                    String saved5 = numbers5.substring(index, index + 1);
+//                    String no5 = recentNumbers.get(i - 1).getString("no");
+//
+//                    String no1 = recentNumbers.get(i).getString("no");
+//                    String no2 = recentNumbers.get(i + 1).getString("no");
+//                    String no3 = recentNumbers.get(i + 2).getString("no");
+////                    String no4 = recentNumbers.get(i + 3).getString("no");
+//                    sb.append("<p>期数:").append(no5).append(" 号码:").append(saved5).append("</p>");
+//                    sb.append("<p>期数:").append(no1).append(" 号码:").append(saved1).append("</p>");
+//                    sb.append("<p>期数:").append(no2).append(" 号码:").append(saved2).append("</p>");
+//                    sb.append("<p>期数:").append(no3).append(" 号码:").append(saved3).append("</p>");
+////                    sb.append("<p>期数:").append(no4).append(" 号码:").append(saved4).append("</p>");
+//                    sb.append("<p>------------------------------------------------</p>");
+//                }
+//            }
+//        }
+//        return sb.toString();
     }
 
     public String qishuInterval(int interval, String qishu) {
