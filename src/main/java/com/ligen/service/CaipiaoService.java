@@ -274,7 +274,7 @@ public class CaipiaoService {
      * @return
      */
     public String orderTail(int index, String code, Integer count) {
-
+        long start = System.currentTimeMillis();
         if (count == null) {
             count = 5000;
         }
@@ -284,6 +284,7 @@ public class CaipiaoService {
         Query query = new Query();
         query.with(new Sort(Sort.Direction.DESC, "_id")).limit(count);
         List<JSONObject> recentNumbers = mongoTemplate.find(query, JSONObject.class, "cqssc");
+        logger.info("order_tail read data timeuse:{}", System.currentTimeMillis() - start);
         StringBuilder sb = new StringBuilder();
         for (int i=0; i<recentNumbers.size() - (length - 1); i++) {
             char[] savedNumbers = new char[length];
@@ -313,6 +314,7 @@ public class CaipiaoService {
             }
 
         }
+        logger.info("order_tail finish calculate timeuse:{}", System.currentTimeMillis() - start);
         return sb.toString();
 
 
