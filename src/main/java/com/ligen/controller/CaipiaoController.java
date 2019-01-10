@@ -71,6 +71,17 @@ public class CaipiaoController {
         return caipiaoService.cqssc(request);
     }
 
+    @RequestMapping(value = "cqssc_v2", method = RequestMethod.GET)
+    public String cqsscGetV2() {
+        return "cqssc_v2";
+    }
+
+    @RequestMapping(value = "cqssc_v2", method = RequestMethod.POST)
+    @ResponseBody
+    public String cqsscPostV2(HttpServletRequest request) {
+        return caipiaoService.cqsscV2(request);
+    }
+
     @RequestMapping(value = "cqssc_filter", method = RequestMethod.GET)
     public String cqsscFilterGet() {
         return "cqssc_filter";

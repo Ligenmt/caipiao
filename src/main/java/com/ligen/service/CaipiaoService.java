@@ -211,9 +211,83 @@ public class CaipiaoService {
         for (String s : inNumbers) {
             sb.append(s).append(" ");
         }
-//        return sb.toString().trim() + matchSb.toString();
         return sb.toString().trim();
     }
+
+    public String cqsscV2(HttpServletRequest request) {
+        int count = 10000; //过滤期数，默认10000
+        String numbers = request.getParameter("numbers"); //待过滤号码集，都是4位
+        int removeIndex = Integer.parseInt(request.getParameter("remove")) - 1; //5位中不考虑的位置
+        String[] filtNumbers = numbers.split(" ");
+
+        Query query = new Query();
+        query.with(new Sort(Sort.Direction.DESC, "_id")).limit(count);
+        List<JSONObject> cqssc = mongoTemplate.find(query, JSONObject.class, "cqssc");
+        //先移除不考虑的位置
+        List<String> handledNumbers = new ArrayList<>();
+        for (JSONObject item : cqssc) {
+            String prizeNumber = item.getString("result");
+            prizeNumber = removeString(prizeNumber, removeIndex);
+            handledNumbers.add(prizeNumber);
+        }
+        for (String filtNumber : filtNumbers) {
+
+            char[] filtChars = filtNumber.toCharArray();
+            for (int j=handledNumbers.size()-1; j>=0; j--) {
+                String number = handledNumbers.get(j);
+                //比较每一位
+                char[] chars = number.toCharArray();
+                int sameCount = 0;
+                for (int i=0; i<4; i++) {
+                    if (filtChars[i] == chars[i]) {
+                        sameCount += 1;
+                    }
+                }
+                //有两位一样就过滤掉
+                if (sameCount >= 2) {
+                    handledNumbers.remove(j);
+                }
+            }
+        }
+
+        StringBuilder matchSb = new StringBuilder();
+
+        matchSb.append("<br /><br />");
+        for (String number : handledNumbers) {
+            matchSb.append("<p>").append(number).append("</p>");
+        }
+//        for (JSONObject item : cqssc) {
+//            String prizeNumber = item.getString("result");
+//            if (removeIndex >= 0) {
+//                prizeNumber = removeString(prizeNumber, removeIndex);
+//            }
+//            for (int i=inNumbers.size()-1; i>=0; i--) {
+//                String inNumber = inNumbers.get(i);
+//                if (inNumber.equals(prizeNumber)) {
+//                    logger.info("cqssc match in:{}, match:{}", inNumber, prizeNumber);
+//                    matchSb.append("in:").append(inNumber).append(" match:").append(prizeNumber).append("<br />");
+//                    inNumbers.remove(i);
+//                } else if (filt2 != null) {
+//                    if (isMatch2(prizeNumber.trim(), inNumber.trim())) {
+//                        logger.info("cqssc match2 in:{}, match:{}", inNumber, prizeNumber);
+//                        matchSb.append("in:").append(inNumber).append(" match2:").append(prizeNumber).append("<br />");
+//                        inNumbers.remove(i);
+//                    }
+//                } else if (filt != null) {
+//                    if (isMatch3(prizeNumber.trim(), inNumber.trim())) {
+//                        logger.info("cqssc match in:{}, match:{}", inNumber, prizeNumber);
+//                        matchSb.append("in:").append(inNumber).append(" match3:").append(prizeNumber).append("<br />");
+//                        inNumbers.remove(i);
+//                    }
+//                }
+//
+//            }
+//        }
+        logger.info("cqssc v2 in:{}, out:{}", 10000, handledNumbers.size());
+        return matchSb.toString().trim();
+    }
+
+
 
     //以任意三位数的组合进行排除
     private boolean isMatch3(String prizeNumber, String inNumber) {
