@@ -16,7 +16,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class CaipiaoService {
 
     @Autowired
     MongoTemplate mongoTemplate;
+
 
     public String pl5(HttpServletRequest request) {
         int count = Integer.parseInt(request.getParameter("count")); //过滤期数
@@ -215,21 +218,22 @@ public class CaipiaoService {
     }
 
     public String cqsscV2(HttpServletRequest request) {
-        int count = 10000; //过滤期数，默认10000
         String numbers = request.getParameter("numbers"); //待过滤号码集，都是4位
-        int removeIndex = Integer.parseInt(request.getParameter("remove")) - 1; //5位中不考虑的位置
         String[] filtNumbers = numbers.split(" ");
-
-        Query query = new Query();
-        query.with(new Sort(Sort.Direction.DESC, "_id")).limit(count);
-        List<JSONObject> cqssc = mongoTemplate.find(query, JSONObject.class, "cqssc");
-        //先移除不考虑的位置
-        List<String> handledNumbers = new ArrayList<>();
-        for (JSONObject item : cqssc) {
-            String prizeNumber = item.getString("result");
-            prizeNumber = removeString(prizeNumber, removeIndex);
-            handledNumbers.add(prizeNumber);
+//        Query query = new Query();
+//        query.with(new Sort(Sort.Direction.DESC, "_id")).limit(count);
+//        List<JSONObject> cqssc = mongoTemplate.find(query, JSONObject.class, "cqssc");
+//        for (JSONObject item : cqssc) {
+//            String prizeNumber = item.getString("result");
+//            prizeNumber = removeString(prizeNumber, removeIndex);
+//            handledNumbers.add(prizeNumber);
+//        }
+        DecimalFormat df = new DecimalFormat("0000");
+        List<String> handledNumbers = new ArrayList<>(10000);
+        for (int i=0; i<10000; i++) {
+            handledNumbers.add(df.format(i));
         }
+
         for (String filtNumber : filtNumbers) {
 
             char[] filtChars = filtNumber.toCharArray();
@@ -393,39 +397,6 @@ public class CaipiaoService {
         return sb.toString();
 
 
-//        for (int i=0; i<recentNumbers.size() - 3; i++) {
-//            String numbers1 = recentNumbers.get(i).getString("result");
-//            String saved1 = numbers1.substring(index, index + 1);
-//
-//            String numbers2 = recentNumbers.get(i + 1).getString("result");
-//            String saved2 = numbers2.substring(index, index + 1);
-//
-//            String numbers3 = recentNumbers.get(i + 2).getString("result");
-//            String saved3 = numbers3.substring(index, index + 1);
-//
-////            String numbers4 = recentNumbers.get(i + 3).getString("result");
-////            String saved4 = numbers4.substring(index, index + 1);
-//
-//            if (saved1.equals(first) && saved2.equals(second) && saved3.equals(third)) {
-//                if (i - 1 >= 0) {
-//                    String numbers5 = recentNumbers.get(i - 1).getString("result");
-//                    String saved5 = numbers5.substring(index, index + 1);
-//                    String no5 = recentNumbers.get(i - 1).getString("no");
-//
-//                    String no1 = recentNumbers.get(i).getString("no");
-//                    String no2 = recentNumbers.get(i + 1).getString("no");
-//                    String no3 = recentNumbers.get(i + 2).getString("no");
-////                    String no4 = recentNumbers.get(i + 3).getString("no");
-//                    sb.append("<p>期数:").append(no5).append(" 号码:").append(saved5).append("</p>");
-//                    sb.append("<p>期数:").append(no1).append(" 号码:").append(saved1).append("</p>");
-//                    sb.append("<p>期数:").append(no2).append(" 号码:").append(saved2).append("</p>");
-//                    sb.append("<p>期数:").append(no3).append(" 号码:").append(saved3).append("</p>");
-////                    sb.append("<p>期数:").append(no4).append(" 号码:").append(saved4).append("</p>");
-//                    sb.append("<p>------------------------------------------------</p>");
-//                }
-//            }
-//        }
-//        return sb.toString();
     }
 
     public String qishuInterval(int interval, String qishu) {
