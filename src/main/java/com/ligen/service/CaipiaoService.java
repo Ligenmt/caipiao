@@ -252,10 +252,11 @@ public class CaipiaoService {
 
         StringBuilder matchSb = new StringBuilder();
 
-        matchSb.append("<br /><br />");
+        matchSb.append("<p>");
         for (String number : handledNumbers) {
-            matchSb.append("<p>").append(number).append("</p>");
+            matchSb.append(number).append(" ");
         }
+        matchSb.append("</p>");
 //        for (JSONObject item : cqssc) {
 //            String prizeNumber = item.getString("result");
 //            if (removeIndex >= 0) {
