@@ -442,14 +442,15 @@ public class CaipiaoService {
     public String notSame(String no, Integer m) {
 
         int d=0;
-        boolean same = false;
-        while (!same) {
+        boolean same = true;
+        List<JSONObject> cqssc = null;
+        while (same) {
             d += 1;
             Query query = new Query();
-            query.addCriteria(Criteria.where("no").is(no));
+            query.addCriteria(Criteria.where("no").lte(no));
             query.fields().include("no").include("result");
             query.with(new Sort(Sort.Direction.DESC, "no")).limit(m * d);
-            List<JSONObject> cqssc = mongoTemplate.find(query, JSONObject.class, "cqssc");
+            cqssc = mongoTemplate.find(query, JSONObject.class, "cqssc");
             String last = null;
             same = false;
             logger.info("d:{}", d);
@@ -464,6 +465,12 @@ public class CaipiaoService {
                 last = res;
             }
         }
-        return d + "";
+        StringBuilder sb = new StringBuilder();
+        sb.append("<p>").append(d).append("</p>");
+        for (int i=0; i<cqssc.size(); i+=d) {
+            sb.append("<p>").append("no:").append(cqssc.get(i).getString("no")).append("  res:").append(cqssc.get(i).getString("result")).append("</p>");
+        }
+
+        return sb.toString();
     }
 }

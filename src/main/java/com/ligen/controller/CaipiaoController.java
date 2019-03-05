@@ -161,7 +161,7 @@ public class CaipiaoController {
 
     @RequestMapping(value = "not_same", method = RequestMethod.GET)
     public String notSameGet() {
-        return "qishu_intertval";
+        return "not_same";
     }
 
     @RequestMapping(value = "not_same", method = RequestMethod.POST)
