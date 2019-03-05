@@ -155,8 +155,20 @@ public class CaipiaoController {
     @ResponseBody
     public String qishuIntervalPost(@RequestParam(value = "interval") int interval,
                                 @RequestParam(value = "qishu") String qishu) {
-
         String result = caipiaoService.qishuInterval(interval, qishu);
+        return result;
+    }
+
+    @RequestMapping(value = "not_same", method = RequestMethod.GET)
+    public String notSameGet() {
+        return "qishu_intertval";
+    }
+
+    @RequestMapping(value = "not_same", method = RequestMethod.POST)
+    @ResponseBody
+    public String notSamePost(@RequestParam(value = "no") String no,
+                                    @RequestParam(value = "m") Integer m) {
+        String result = caipiaoService.notSame(no, m);
         return result;
     }
 }
