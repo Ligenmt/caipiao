@@ -454,7 +454,7 @@ public class CaipiaoService {
             String last = null;
             same = false;
             logger.info("d:{}", d);
-            for (int i=0; i<cqssc.size(); i+=d) {
+            for (int i=(d-1); i<cqssc.size(); i+=d) {
                 JSONObject json = cqssc.get(i);
                 String res = json.getString("result").substring(0, 1);
                 logger.info("no:{}, res:{}", json.getString("no"), res);
