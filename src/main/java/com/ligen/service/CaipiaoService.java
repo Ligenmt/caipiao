@@ -467,7 +467,7 @@ public class CaipiaoService {
         }
         StringBuilder sb = new StringBuilder();
         sb.append("<p>").append(d).append("</p>");
-        for (int i=0; i<cqssc.size(); i+=d) {
+        for (int i=(d-1); i<cqssc.size(); i+=d) {
             sb.append("<p>").append("no:").append(cqssc.get(i).getString("no")).append("  res:").append(cqssc.get(i).getString("result")).append("</p>");
         }
 
