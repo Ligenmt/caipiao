@@ -89,7 +89,7 @@ public class CaipiaoController {
 
     /**
      *
-     * @param count 过滤期数
+     * @param count 过滤出重复号码
      * @param times 重复次数（最小2）
      * @param remove 移除位数
      * @return
@@ -100,6 +100,10 @@ public class CaipiaoController {
         return caipiaoService.cqsscFilter(count, times, remove-1);
     }
 
+    /**
+     * 输入多批数据取交集
+     * @return
+     */
     @RequestMapping(value = "intersection", method = RequestMethod.GET)
     public String compareGet() {
         return "intersection";
@@ -170,5 +174,16 @@ public class CaipiaoController {
                                     @RequestParam(value = "m") Integer m) {
         String result = caipiaoService.notSame(no, m);
         return result;
+    }
+
+    @RequestMapping(value = "algorithm01", method = RequestMethod.GET)
+    public String algorithm01Get() {
+        return "algorithm01";
+    }
+
+    @RequestMapping(value = "algorithm01", method = RequestMethod.POST)
+    @ResponseBody
+    public String algorithm01Post(@RequestParam(value = "no") String no) {
+        return caipiaoService.algorithm01(no);
     }
 }
