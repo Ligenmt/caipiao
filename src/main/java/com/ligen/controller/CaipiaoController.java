@@ -183,7 +183,7 @@ public class CaipiaoController {
 
     @RequestMapping(value = "algorithm01", method = RequestMethod.POST)
     @ResponseBody
-    public String algorithm01Post(@RequestParam(value = "no") String no) {
-        return caipiaoService.algorithm01(no);
+    public String algorithm01Post(@RequestParam(value = "no") String no, @RequestParam(value = "count") int count) {
+        return caipiaoService.algorithm01(no, count);
     }
 }
