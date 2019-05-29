@@ -356,7 +356,7 @@ public class CaipiaoService {
      */
     public String orderTail(int index, String code, Integer count) {
 
-        JSONArray result = orderTailCalculate(index, code, count);
+        JSONArray result = orderTailCalculate(index, code, count, "cqssc");
         String html = orderTailRender(result);
         return html;
 //        long start = System.currentTimeMillis();
@@ -409,7 +409,7 @@ public class CaipiaoService {
 //        return sb.toString();
     }
 
-    public JSONArray orderTailCalculate(int index, String code, Integer count) {
+    public JSONArray orderTailCalculate(int index, String code, Integer count, String collection) {
         long start = System.currentTimeMillis();
         if (count == null) {
             count = 5000;
@@ -419,7 +419,7 @@ public class CaipiaoService {
 
         Query query = new Query();
         query.with(new Sort(Sort.Direction.DESC, "_id")).limit(count);
-        List<JSONObject> recentNumbers = mongoTemplate.find(query, JSONObject.class, "cqssc");
+        List<JSONObject> recentNumbers = mongoTemplate.find(query, JSONObject.class, collection);
         logger.info("order_tail read data timeuse:{}", System.currentTimeMillis() - start);
         JSONArray resultArray = new JSONArray();
         for (int i=0; i<recentNumbers.size() - (length - 1); i++) {
@@ -551,11 +551,11 @@ public class CaipiaoService {
         return sb.toString();
     }
 
-    public String algorithm01(String no, int count) {
+    public String algorithm01(String no, int count, String collection) {
         Query query = new Query();
         query.addCriteria(Criteria.where("no").lte(no));
         query.with(new Sort(Sort.Direction.DESC, "no")).limit(count);
-        List<JSONObject> cqsscList = mongoTemplate.find(query, JSONObject.class, "cqssc");
+        List<JSONObject> cqsscList = mongoTemplate.find(query, JSONObject.class, collection);
         StringBuilder html = new StringBuilder();
 
         String[] lastNo = new String[4];
@@ -572,7 +572,7 @@ public class CaipiaoService {
             query = new Query();
             query.addCriteria(Criteria.where("no").lte(currNo));
             query.with(new Sort(Sort.Direction.DESC, "no")).limit(5000);
-            List<JSONObject> originList = mongoTemplate.find(query, JSONObject.class, "cqssc");
+            List<JSONObject> originList = mongoTemplate.find(query, JSONObject.class, collection);
 
             String b1 = null;
             String b2 = null;
@@ -605,10 +605,10 @@ public class CaipiaoService {
             String c3 = b1.substring(2,3) + b2.substring(2,3) + b3.substring(2,3) + b4.substring(2,3);
             String c4 = b1.substring(3,4) + b2.substring(3,4) + b3.substring(3,4) + b4.substring(3,4);
             logger.info("algorithm01 第{}期C: c1:{} c2:{} c3:{} c4:{}", currNo, c1, c2, c3, c4);
-            JSONArray d1Array = orderTailCalculate(1, c1, 30000);
-            JSONArray d2Array = orderTailCalculate(2, c2, 30000);
-            JSONArray d3Array = orderTailCalculate(3, c3, 30000);
-            JSONArray d4Array = orderTailCalculate(4, c4, 30000);
+            JSONArray d1Array = orderTailCalculate(1, c1, 30000, collection);
+            JSONArray d2Array = orderTailCalculate(2, c2, 30000, collection);
+            JSONArray d3Array = orderTailCalculate(3, c3, 30000, collection);
+            JSONArray d4Array = orderTailCalculate(4, c4, 30000, collection);
 
             String d1 = "x";
             String d2 = "x";

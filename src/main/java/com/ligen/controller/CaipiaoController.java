@@ -184,6 +184,17 @@ public class CaipiaoController {
     @RequestMapping(value = "algorithm01", method = RequestMethod.POST)
     @ResponseBody
     public String algorithm01Post(@RequestParam(value = "no") String no, @RequestParam(value = "count") int count) {
-        return caipiaoService.algorithm01(no, count);
+        return caipiaoService.algorithm01(no, count, "cqssc");
+    }
+
+    @RequestMapping(value = "algorithm01_xywfc", method = RequestMethod.GET)
+    public String algorithm01XywfcGet() {
+        return "algorithm01_xywfc";
+    }
+
+    @RequestMapping(value = "algorithm01_xywfc", method = RequestMethod.POST)
+    @ResponseBody
+    public String algorithm01XywfcPost(@RequestParam(value = "no") String no, @RequestParam(value = "count") int count) {
+        return caipiaoService.algorithm01(no, count, "xywfc");
     }
 }
