@@ -69,7 +69,7 @@ public class CaipiaoTask {
         }
     }
 
-    @Scheduled(cron="0 0/5 * * * ?")
+    @Scheduled(cron="0 2/5 * * * ?")
     public void 重庆时时彩() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
@@ -82,7 +82,7 @@ public class CaipiaoTask {
         }
     }
 
-    @Scheduled(cron="0 0/5 * * * ?")
+    @Scheduled(cron="0 2/5 * * * ?")
     public void 幸运五分彩() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
