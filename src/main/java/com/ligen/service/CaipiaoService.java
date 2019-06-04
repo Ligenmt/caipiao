@@ -2,10 +2,6 @@ package com.ligen.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +12,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -646,5 +641,86 @@ public class CaipiaoService {
 
         }
         return html.toString();
+    }
+
+    public String abxxn(String code, int count) {
+        Query query = new Query();
+        query.fields().include("no").include("result");
+        query.with(new Sort(Sort.Direction.DESC, "no")).limit(30000);
+        List<JSONObject> cqsscList = mongoTemplate.find(query, JSONObject.class, "cqssc");
+
+        JSONArray resultArray01 = abxxn(0, 1, code, count, cqsscList);
+        JSONArray resultArray02 = abxxn(0, 2, code, count, cqsscList);
+        JSONArray resultArray03 = abxxn(0, 3, code, count, cqsscList);
+        JSONArray resultArray12 = abxxn(1, 2, code, count, cqsscList);
+        JSONArray resultArray13 = abxxn(1, 3, code, count, cqsscList);
+        JSONArray resultArray23 = abxxn(2, 3, code, count, cqsscList);
+
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("<p>第1,2位").append("</p>");
+        for (int i=0; i<resultArray01.size(); i++) {
+            sb.append("<p>")
+                .append("期号:")
+                .append(resultArray01.getJSONObject(i).getString("no"))
+                .append("   号码：")
+                .append(resultArray01.getJSONObject(i).getString("result"))
+                .append("</p>");
+
+        }
+        sb.append("<p>第1,3位").append("</p>");
+        for (int i=0; i<resultArray02.size(); i++) {
+            sb.append("<p>").append("期号:").append(resultArray01.getJSONObject(i).getString("no")).append("</p>");
+
+        }
+        sb.append("<p>第1,4位").append("</p>");
+        for (int i=0; i<resultArray03.size(); i++) {
+            sb.append("<p>").append("期号:").append(resultArray01.getJSONObject(i).getString("no")).append("</p>");
+
+        }
+        sb.append("<p>第2,3位").append("</p>");
+        for (int i=0; i<resultArray12.size(); i++) {
+            sb.append("<p>").append("期号:").append(resultArray01.getJSONObject(i).getString("no")).append("</p>");
+
+        }
+        sb.append("<p>第2,4位").append("</p>");
+        for (int i=0; i<resultArray13.size(); i++) {
+            sb.append("<p>").append("期号:").append(resultArray01.getJSONObject(i).getString("no")).append("</p>");
+
+        }
+        sb.append("<p>第3,4位").append("</p>");
+        for (int i=0; i<resultArray23.size(); i++) {
+            sb.append("<p>").append("期号:").append(resultArray01.getJSONObject(i).getString("no")).append("</p>");
+
+        }
+        return sb.toString();
+
+    }
+
+    private JSONArray abxxn(int indexA, int indexB, String code, int count, List<JSONObject> cqsscList) {
+
+        JSONArray resultArray = new JSONArray();
+        String a = code.substring(indexA, indexA + 1);
+        String b = code.substring(indexB, indexB + 1);
+        int currentCount = 0;
+
+        for (int j=0; j<cqsscList.size()-1; j++) {
+            JSONObject cqssc = cqsscList.get(j);
+            String result = cqssc.getString("result");
+            result = result.substring(1);
+            String aa = result.substring(indexA, indexA + 1);
+            String bb = result.substring(indexB, indexB + 1);
+            if (a.equals(aa) && b.equals(bb)) {
+                currentCount++;
+                resultArray.add(new JSONObject()
+                        .fluentPut("no", cqsscList.get(j+1).getString("no"))
+                        .fluentPut("result", cqsscList.get(j+1).getString("result")));
+            }
+            if (count <= currentCount) {
+                break;
+            }
+        }
+        System.out.println(resultArray);
+        return resultArray;
     }
 }
