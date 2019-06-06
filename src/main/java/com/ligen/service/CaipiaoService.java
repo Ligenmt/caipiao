@@ -256,38 +256,9 @@ public class CaipiaoService {
             matchSb.append(number).append(" ");
         }
         matchSb.append("</p>");
-//        for (JSONObject item : cqssc) {
-//            String prizeNumber = item.getString("result");
-//            if (removeIndex >= 0) {
-//                prizeNumber = removeString(prizeNumber, removeIndex);
-//            }
-//            for (int i=inNumbers.size()-1; i>=0; i--) {
-//                String inNumber = inNumbers.get(i);
-//                if (inNumber.equals(prizeNumber)) {
-//                    logger.info("cqssc match in:{}, match:{}", inNumber, prizeNumber);
-//                    matchSb.append("in:").append(inNumber).append(" match:").append(prizeNumber).append("<br />");
-//                    inNumbers.remove(i);
-//                } else if (filt2 != null) {
-//                    if (isMatch2(prizeNumber.trim(), inNumber.trim())) {
-//                        logger.info("cqssc match2 in:{}, match:{}", inNumber, prizeNumber);
-//                        matchSb.append("in:").append(inNumber).append(" match2:").append(prizeNumber).append("<br />");
-//                        inNumbers.remove(i);
-//                    }
-//                } else if (filt != null) {
-//                    if (isMatch3(prizeNumber.trim(), inNumber.trim())) {
-//                        logger.info("cqssc match in:{}, match:{}", inNumber, prizeNumber);
-//                        matchSb.append("in:").append(inNumber).append(" match3:").append(prizeNumber).append("<br />");
-//                        inNumbers.remove(i);
-//                    }
-//                }
-//
-//            }
-//        }
         logger.info("cqssc v2 in:{}, out:{}", 10000, handledNumbers.size());
         return matchSb.toString().trim();
     }
-
-
 
     //以任意三位数的组合进行排除
     private boolean isMatch3(String prizeNumber, String inNumber) {
@@ -354,54 +325,6 @@ public class CaipiaoService {
         JSONArray result = orderTailCalculate(index, code, count, "cqssc");
         String html = orderTailRender(result);
         return html;
-//        long start = System.currentTimeMillis();
-//        if (count == null) {
-//            count = 5000;
-//        }
-//        int length = code.length(); //数列有几个数
-//        char[] chars = code.toCharArray();
-//
-//        Query query = new Query();
-//        query.with(new Sort(Sort.Direction.DESC, "_id")).limit(count);
-//        List<JSONObject> recentNumbers = mongoTemplate.find(query, JSONObject.class, "cqssc");
-//        logger.info("order_tail read data timeuse:{}", System.currentTimeMillis() - start);
-//        StringBuilder sb = new StringBuilder();
-//        JSONArray resultArray = new JSONArray();
-//        for (int i=0; i<recentNumbers.size() - (length - 1); i++) {
-//            char[] savedNumbers = new char[length];
-//            for (int j=0; j<length; j++) {
-//                String numbers = recentNumbers.get(i+j).getString("result");
-//                char[] saved = numbers.substring(index, index + 1).toCharArray();
-//                savedNumbers[j] = saved[0];
-//            }
-//            //比较每个位置的数
-//            boolean same = true;
-//            for (int j=0; j<length; j++) {
-//                if (savedNumbers[j] != chars[j]) {
-//                    same = false;
-//                    break;
-//                }
-//            }
-//            if (same && i >= 1) {
-//                String numbersTarget = recentNumbers.get(i - 1).getString("result");
-//                String savedTarget = numbersTarget.substring(index, index + 1);
-//                String noTarget = recentNumbers.get(i - 1).getString("no");
-//
-//                JSONArray item = new JSONArray();
-//                sb.append("<p>期数:").append(noTarget).append(" 号码:").append(savedTarget).append("</p>");
-//                item.add(new JSONObject().fluentPut("no", noTarget).fluentPut("result", savedTarget));
-//                for (int j=0; j<length; j++) {
-//                    String sequenceNo = recentNumbers.get(i + j).getString("no");
-//                    sb.append("<p>期数:").append(sequenceNo).append(" 号码:").append(savedNumbers[j]).append("</p>");
-//                    item.add(new JSONObject().fluentPut("no", sequenceNo).fluentPut("result", savedNumbers[j]));
-//                }
-//                sb.append("<p>------------------------------------------------</p>");
-//                resultArray.add(item);
-//            }
-//
-//        }
-//        logger.info("order_tail finish calculate timeuse:{}", System.currentTimeMillis() - start);
-//        return sb.toString();
     }
 
     public JSONArray orderTailCalculate(int index, String code, Integer count, String collection) {
@@ -656,7 +579,6 @@ public class CaipiaoService {
         JSONArray resultArray13 = abxxn(1, 3, code, count, cqsscList);
         JSONArray resultArray23 = abxxn(2, 3, code, count, cqsscList);
 
-
         StringBuilder sb = new StringBuilder();
         sb.append("<p>第1,2位").append("</p>");
         for (int i=0; i<resultArray01.size(); i++) {
@@ -666,32 +588,51 @@ public class CaipiaoService {
                 .append("   号码：")
                 .append(resultArray01.getJSONObject(i).getString("result"))
                 .append("</p>");
-
         }
         sb.append("<p>第1,3位").append("</p>");
         for (int i=0; i<resultArray02.size(); i++) {
-            sb.append("<p>").append("期号:").append(resultArray01.getJSONObject(i).getString("no")).append("</p>");
-
+            sb.append("<p>")
+                    .append("期号:")
+                    .append(resultArray02.getJSONObject(i).getString("no"))
+                    .append("   号码：")
+                    .append(resultArray02.getJSONObject(i).getString("result"))
+                    .append("</p>");
         }
         sb.append("<p>第1,4位").append("</p>");
         for (int i=0; i<resultArray03.size(); i++) {
-            sb.append("<p>").append("期号:").append(resultArray01.getJSONObject(i).getString("no")).append("</p>");
-
+            sb.append("<p>")
+                    .append("期号:")
+                    .append(resultArray03.getJSONObject(i).getString("no"))
+                    .append("   号码：")
+                    .append(resultArray03.getJSONObject(i).getString("result"))
+                    .append("</p>");
         }
         sb.append("<p>第2,3位").append("</p>");
         for (int i=0; i<resultArray12.size(); i++) {
-            sb.append("<p>").append("期号:").append(resultArray01.getJSONObject(i).getString("no")).append("</p>");
-
+            sb.append("<p>")
+                    .append("期号:")
+                    .append(resultArray12.getJSONObject(i).getString("no"))
+                    .append("   号码：")
+                    .append(resultArray12.getJSONObject(i).getString("result"))
+                    .append("</p>");
         }
         sb.append("<p>第2,4位").append("</p>");
         for (int i=0; i<resultArray13.size(); i++) {
-            sb.append("<p>").append("期号:").append(resultArray01.getJSONObject(i).getString("no")).append("</p>");
-
+            sb.append("<p>")
+                    .append("期号:")
+                    .append(resultArray13.getJSONObject(i).getString("no"))
+                    .append("   号码：")
+                    .append(resultArray13.getJSONObject(i).getString("result"))
+                    .append("</p>");
         }
         sb.append("<p>第3,4位").append("</p>");
         for (int i=0; i<resultArray23.size(); i++) {
-            sb.append("<p>").append("期号:").append(resultArray01.getJSONObject(i).getString("no")).append("</p>");
-
+            sb.append("<p>")
+                    .append("期号:")
+                    .append(resultArray23.getJSONObject(i).getString("no"))
+                    .append("   号码：")
+                    .append(resultArray23.getJSONObject(i).getString("result"))
+                    .append("</p>");
         }
         return sb.toString();
 
