@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
 
 /**
  * Created by ligen on 2018/3/7.
@@ -200,7 +199,7 @@ public class CaipiaoController {
 
     @RequestMapping(value = "abxxn", method = RequestMethod.GET)
     public String abxxnGet() {
-        return "abxxn";
+        return "abxxnCalculate";
     }
 
     @RequestMapping(value = "abxxn", method = RequestMethod.POST)

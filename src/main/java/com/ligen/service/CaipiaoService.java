@@ -572,22 +572,54 @@ public class CaipiaoService {
         query.with(new Sort(Sort.Direction.DESC, "no")).limit(30000);
         List<JSONObject> cqsscList = mongoTemplate.find(query, JSONObject.class, "cqssc");
 
-        JSONArray resultArray01 = abxxn(0, 1, code, count, cqsscList);
-        JSONArray resultArray02 = abxxn(0, 2, code, count, cqsscList);
-        JSONArray resultArray03 = abxxn(0, 3, code, count, cqsscList);
-        JSONArray resultArray12 = abxxn(1, 2, code, count, cqsscList);
-        JSONArray resultArray13 = abxxn(1, 3, code, count, cqsscList);
-        JSONArray resultArray23 = abxxn(2, 3, code, count, cqsscList);
+        JSONArray resultArray01 = abxxnCalculate(0, 1, code, count, cqsscList);
+        JSONArray resultArray02 = abxxnCalculate(0, 2, code, count, cqsscList);
+        JSONArray resultArray03 = abxxnCalculate(0, 3, code, count, cqsscList);
+        JSONArray resultArray12 = abxxnCalculate(1, 2, code, count, cqsscList);
+        JSONArray resultArray13 = abxxnCalculate(1, 3, code, count, cqsscList);
+        JSONArray resultArray23 = abxxnCalculate(2, 3, code, count, cqsscList);
 
+        String html = abxxnRender(resultArray01, resultArray02, resultArray03, resultArray12, resultArray13, resultArray23);
+        return html;
+
+    }
+
+    private JSONArray abxxnCalculate(int indexA, int indexB, String code, int count, List<JSONObject> cqsscList) {
+
+        JSONArray resultArray = new JSONArray();
+        String a = code.substring(indexA, indexA + 1);
+        String b = code.substring(indexB, indexB + 1);
+        int currentCount = 0;
+
+        for (int j=0; j<cqsscList.size()-1; j++) {
+            JSONObject cqssc = cqsscList.get(j);
+            String result = cqssc.getString("result");
+            result = result.substring(1);
+            String aa = result.substring(indexA, indexA + 1);
+            String bb = result.substring(indexB, indexB + 1);
+            if (a.equals(aa) && b.equals(bb)) {
+                currentCount++;
+                resultArray.add(new JSONObject()
+                        .fluentPut("no", cqsscList.get(j+1).getString("no"))
+                        .fluentPut("result", cqsscList.get(j+1).getString("result")));
+            }
+            if (count <= currentCount) {
+                break;
+            }
+        }
+        return resultArray;
+    }
+
+    private String abxxnRender(JSONArray resultArray01, JSONArray resultArray02, JSONArray resultArray03, JSONArray resultArray12, JSONArray resultArray13, JSONArray resultArray23) {
         StringBuilder sb = new StringBuilder();
         sb.append("<p>第1,2位").append("</p>");
         for (int i=0; i<resultArray01.size(); i++) {
             sb.append("<p>")
-                .append("期号:")
-                .append(resultArray01.getJSONObject(i).getString("no"))
-                .append("   号码：")
-                .append(resultArray01.getJSONObject(i).getString("result"))
-                .append("</p>");
+                    .append("期号:")
+                    .append(resultArray01.getJSONObject(i).getString("no"))
+                    .append("   号码：")
+                    .append(resultArray01.getJSONObject(i).getString("result"))
+                    .append("</p>");
         }
         sb.append("<p>第1,3位").append("</p>");
         for (int i=0; i<resultArray02.size(); i++) {
@@ -635,33 +667,7 @@ public class CaipiaoService {
                     .append("</p>");
         }
         return sb.toString();
-
     }
 
-    private JSONArray abxxn(int indexA, int indexB, String code, int count, List<JSONObject> cqsscList) {
 
-        JSONArray resultArray = new JSONArray();
-        String a = code.substring(indexA, indexA + 1);
-        String b = code.substring(indexB, indexB + 1);
-        int currentCount = 0;
-
-        for (int j=0; j<cqsscList.size()-1; j++) {
-            JSONObject cqssc = cqsscList.get(j);
-            String result = cqssc.getString("result");
-            result = result.substring(1);
-            String aa = result.substring(indexA, indexA + 1);
-            String bb = result.substring(indexB, indexB + 1);
-            if (a.equals(aa) && b.equals(bb)) {
-                currentCount++;
-                resultArray.add(new JSONObject()
-                        .fluentPut("no", cqsscList.get(j+1).getString("no"))
-                        .fluentPut("result", cqsscList.get(j+1).getString("result")));
-            }
-            if (count <= currentCount) {
-                break;
-            }
-        }
-        System.out.println(resultArray);
-        return resultArray;
-    }
 }
