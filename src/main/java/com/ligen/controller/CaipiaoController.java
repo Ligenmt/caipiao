@@ -199,13 +199,26 @@ public class CaipiaoController {
 
     @RequestMapping(value = "abxxn", method = RequestMethod.GET)
     public String abxxnGet() {
-        return "abxxnCalculate";
+        return "abxxn";
     }
 
     @RequestMapping(value = "abxxn", method = RequestMethod.POST)
     @ResponseBody
     public String abxxnPost(@RequestParam(value = "code") String code, @RequestParam(value = "count") int count) {
         String abxxn = caipiaoService.abxxn(code, count);
+        return abxxn;
+    }
+
+
+    @RequestMapping(value = "abxxnv2", method = RequestMethod.GET)
+    public String abxxnV2Get() {
+        return "abxxnv2";
+    }
+
+    @RequestMapping(value = "abxxnv2", method = RequestMethod.POST)
+    @ResponseBody
+    public String abxxnV2Post(@RequestParam(value = "code") String code, @RequestParam(value = "count") int count) {
+        String abxxn = caipiaoService.abxxnV2(code, count);
         return abxxn;
     }
 }

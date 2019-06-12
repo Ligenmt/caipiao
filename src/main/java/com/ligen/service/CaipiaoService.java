@@ -567,41 +567,111 @@ public class CaipiaoService {
     }
 
     public String abxxn(String code, int count) {
+
+        Query query = new Query();
+        query.fields().include("no").include("result");
+        query.with(new Sort(Sort.Direction.DESC, "no")).limit(10000);
+        List<JSONObject> cqsscList = mongoTemplate.find(query, JSONObject.class, "cqssc");
+
+        JSONArray resultArray12 = abxxnCalculate(1, 2, code, count, cqsscList);
+        JSONArray resultArray13 = abxxnCalculate(1, 3, code, count, cqsscList);
+        JSONArray resultArray14 = abxxnCalculate(1, 4, code, count, cqsscList);
+        JSONArray resultArray23 = abxxnCalculate(2, 3, code, count, cqsscList);
+        JSONArray resultArray24 = abxxnCalculate(2, 4, code, count, cqsscList);
+        JSONArray resultArray34 = abxxnCalculate(3, 4, code, count, cqsscList);
+
+        String html = abxxnRender(resultArray12, resultArray13, resultArray14, resultArray23, resultArray24, resultArray34);
+        return html;
+
+    }
+
+    public String abxxnV2(String code, int count) {
+
         Query query = new Query();
         query.fields().include("no").include("result");
         query.with(new Sort(Sort.Direction.DESC, "no")).limit(30000);
         List<JSONObject> cqsscList = mongoTemplate.find(query, JSONObject.class, "cqssc");
 
-        JSONArray resultArray01 = abxxnCalculate(0, 1, code, count, cqsscList);
-        JSONArray resultArray02 = abxxnCalculate(0, 2, code, count, cqsscList);
-        JSONArray resultArray03 = abxxnCalculate(0, 3, code, count, cqsscList);
         JSONArray resultArray12 = abxxnCalculate(1, 2, code, count, cqsscList);
         JSONArray resultArray13 = abxxnCalculate(1, 3, code, count, cqsscList);
+        JSONArray resultArray14 = abxxnCalculate(1, 4, code, count, cqsscList);
         JSONArray resultArray23 = abxxnCalculate(2, 3, code, count, cqsscList);
+        JSONArray resultArray24 = abxxnCalculate(2, 4, code, count, cqsscList);
+        JSONArray resultArray34 = abxxnCalculate(3, 4, code, count, cqsscList);
 
-        String html = abxxnRender(resultArray01, resultArray02, resultArray03, resultArray12, resultArray13, resultArray23);
-        return html;
+        for (int i=cqsscList.size(); i>=0; i--) {
+            JSONObject cqssc = cqsscList.get(i);
+            String result = cqssc.getString("result");
 
+            if (abxxnV2Filt(resultArray12, 1, 2, result)) {
+                cqsscList.remove(i);
+                continue;
+            }
+            if (abxxnV2Filt(resultArray13, 1, 3, result)) {
+                cqsscList.remove(i);
+                continue;
+            }
+            if (abxxnV2Filt(resultArray14, 1, 4, result)) {
+                cqsscList.remove(i);
+                continue;
+            }
+            if (abxxnV2Filt(resultArray23, 2, 3, result)) {
+                cqsscList.remove(i);
+                continue;
+            }
+            if (abxxnV2Filt(resultArray24, 2, 4, result)) {
+                cqsscList.remove(i);
+                continue;
+            }
+            if (abxxnV2Filt(resultArray34, 3, 4, result)) {
+                cqsscList.remove(i);
+            }
+
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i=0; i<cqsscList.size(); i++) {
+            sb.append("<p>").append("期数:").append(cqsscList.get(i).getString("no"))
+            .append("   号码:").append(cqsscList.get(i).getString("result")).append("</p>");
+        }
+
+        return sb.toString();
     }
+
+    private boolean abxxnV2Filt(JSONArray resultArray, int a, int b, String result) {
+        for (int j=0; j<resultArray.size(); j++) {
+            String filterResult = resultArray.getJSONObject(j).getString("result");
+            char[] chars = result.toCharArray();
+            char[] filtChars = filterResult.toCharArray();
+            if (chars[a] == filtChars[a] && chars[b] == filtChars[b]) {
+                logger.info("abxxnV2Filt remove:{}", result);
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private JSONArray abxxnCalculate(int indexA, int indexB, String code, int count, List<JSONObject> cqsscList) {
 
         JSONArray resultArray = new JSONArray();
-        String a = code.substring(indexA, indexA + 1);
-        String b = code.substring(indexB, indexB + 1);
+        String a = code.substring(indexA-1, indexA);
+        String b = code.substring(indexB-1, indexB);
         int currentCount = 0;
 
-        for (int j=0; j<cqsscList.size()-1; j++) {
+        for (int j=1; j<cqsscList.size()-1; j++) {
             JSONObject cqssc = cqsscList.get(j);
             String result = cqssc.getString("result");
-            result = result.substring(1);
+            String no = cqssc.getString("no");
+//            result = result.substring(1);
             String aa = result.substring(indexA, indexA + 1);
             String bb = result.substring(indexB, indexB + 1);
             if (a.equals(aa) && b.equals(bb)) {
+                logger.info("{} {} code:{}, no:{}, result:{}", indexA, indexB, code, no, result);
                 currentCount++;
                 resultArray.add(new JSONObject()
-                        .fluentPut("no", cqsscList.get(j+1).getString("no"))
-                        .fluentPut("result", cqsscList.get(j+1).getString("result")));
+                        .fluentPut("no", cqsscList.get(j-1).getString("no"))
+                        .fluentPut("result", cqsscList.get(j-1).getString("result")));
             }
             if (count <= currentCount) {
                 break;
@@ -610,36 +680,9 @@ public class CaipiaoService {
         return resultArray;
     }
 
-    private String abxxnRender(JSONArray resultArray01, JSONArray resultArray02, JSONArray resultArray03, JSONArray resultArray12, JSONArray resultArray13, JSONArray resultArray23) {
+    private String abxxnRender(JSONArray resultArray12, JSONArray resultArray13, JSONArray resultArray14, JSONArray resultArray23, JSONArray resultArray24, JSONArray resultArray34) {
         StringBuilder sb = new StringBuilder();
         sb.append("<p>第1,2位").append("</p>");
-        for (int i=0; i<resultArray01.size(); i++) {
-            sb.append("<p>")
-                    .append("期号:")
-                    .append(resultArray01.getJSONObject(i).getString("no"))
-                    .append("   号码：")
-                    .append(resultArray01.getJSONObject(i).getString("result"))
-                    .append("</p>");
-        }
-        sb.append("<p>第1,3位").append("</p>");
-        for (int i=0; i<resultArray02.size(); i++) {
-            sb.append("<p>")
-                    .append("期号:")
-                    .append(resultArray02.getJSONObject(i).getString("no"))
-                    .append("   号码：")
-                    .append(resultArray02.getJSONObject(i).getString("result"))
-                    .append("</p>");
-        }
-        sb.append("<p>第1,4位").append("</p>");
-        for (int i=0; i<resultArray03.size(); i++) {
-            sb.append("<p>")
-                    .append("期号:")
-                    .append(resultArray03.getJSONObject(i).getString("no"))
-                    .append("   号码：")
-                    .append(resultArray03.getJSONObject(i).getString("result"))
-                    .append("</p>");
-        }
-        sb.append("<p>第2,3位").append("</p>");
         for (int i=0; i<resultArray12.size(); i++) {
             sb.append("<p>")
                     .append("期号:")
@@ -648,7 +691,7 @@ public class CaipiaoService {
                     .append(resultArray12.getJSONObject(i).getString("result"))
                     .append("</p>");
         }
-        sb.append("<p>第2,4位").append("</p>");
+        sb.append("<p>第1,3位").append("</p>");
         for (int i=0; i<resultArray13.size(); i++) {
             sb.append("<p>")
                     .append("期号:")
@@ -657,13 +700,40 @@ public class CaipiaoService {
                     .append(resultArray13.getJSONObject(i).getString("result"))
                     .append("</p>");
         }
-        sb.append("<p>第3,4位").append("</p>");
+        sb.append("<p>第1,4位").append("</p>");
+        for (int i=0; i<resultArray14.size(); i++) {
+            sb.append("<p>")
+                    .append("期号:")
+                    .append(resultArray14.getJSONObject(i).getString("no"))
+                    .append("   号码：")
+                    .append(resultArray14.getJSONObject(i).getString("result"))
+                    .append("</p>");
+        }
+        sb.append("<p>第2,3位").append("</p>");
         for (int i=0; i<resultArray23.size(); i++) {
             sb.append("<p>")
                     .append("期号:")
                     .append(resultArray23.getJSONObject(i).getString("no"))
                     .append("   号码：")
                     .append(resultArray23.getJSONObject(i).getString("result"))
+                    .append("</p>");
+        }
+        sb.append("<p>第2,4位").append("</p>");
+        for (int i=0; i<resultArray24.size(); i++) {
+            sb.append("<p>")
+                    .append("期号:")
+                    .append(resultArray24.getJSONObject(i).getString("no"))
+                    .append("   号码：")
+                    .append(resultArray24.getJSONObject(i).getString("result"))
+                    .append("</p>");
+        }
+        sb.append("<p>第3,4位").append("</p>");
+        for (int i=0; i<resultArray34.size(); i++) {
+            sb.append("<p>")
+                    .append("期号:")
+                    .append(resultArray34.getJSONObject(i).getString("no"))
+                    .append("   号码：")
+                    .append(resultArray34.getJSONObject(i).getString("result"))
                     .append("</p>");
         }
         return sb.toString();
