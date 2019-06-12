@@ -589,7 +589,7 @@ public class CaipiaoService {
 
         Query query = new Query();
         query.fields().include("no").include("result");
-        query.with(new Sort(Sort.Direction.DESC, "no")).limit(30000);
+        query.with(new Sort(Sort.Direction.DESC, "no")).limit(10000);
         List<JSONObject> cqsscList = mongoTemplate.find(query, JSONObject.class, "cqssc");
 
         JSONArray resultArray12 = abxxnCalculate(1, 2, code, count, cqsscList);
@@ -599,7 +599,7 @@ public class CaipiaoService {
         JSONArray resultArray24 = abxxnCalculate(2, 4, code, count, cqsscList);
         JSONArray resultArray34 = abxxnCalculate(3, 4, code, count, cqsscList);
 
-        for (int i=cqsscList.size(); i>=0; i--) {
+        for (int i=cqsscList.size()-1; i>=0; i--) {
             JSONObject cqssc = cqsscList.get(i);
             String result = cqssc.getString("result");
 
