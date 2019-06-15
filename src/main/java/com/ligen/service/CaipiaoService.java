@@ -215,14 +215,7 @@ public class CaipiaoService {
     public String cqsscV2(HttpServletRequest request) {
         String numbers = request.getParameter("numbers"); //待过滤号码集，都是4位
         String[] filtNumbers = numbers.split(" ");
-//        Query query = new Query();
-//        query.with(new Sort(Sort.Direction.DESC, "_id")).limit(count);
-//        List<JSONObject> cqssc = mongoTemplate.find(query, JSONObject.class, "cqssc");
-//        for (JSONObject item : cqssc) {
-//            String prizeNumber = item.getString("result");
-//            prizeNumber = removeString(prizeNumber, removeIndex);
-//            handledNumbers.add(prizeNumber);
-//        }
+        //从0000-9999
         DecimalFormat df = new DecimalFormat("0000");
         List<String> handledNumbers = new ArrayList<>(10000);
         for (int i=0; i<10000; i++) {
@@ -599,40 +592,45 @@ public class CaipiaoService {
         JSONArray resultArray24 = abxxnCalculate(2, 4, code, count, cqsscList);
         JSONArray resultArray34 = abxxnCalculate(3, 4, code, count, cqsscList);
 
-        for (int i=cqsscList.size()-1; i>=0; i--) {
-            JSONObject cqssc = cqsscList.get(i);
-            String result = cqssc.getString("result");
+        DecimalFormat df = new DecimalFormat("0000");
+        List<String> handledNumbers = new ArrayList<>(10000);
+        for (int i=0; i<10000; i++) {
+            handledNumbers.add(df.format(i));
+        }
 
-            if (abxxnV2Filt(resultArray12, 1, 2, result)) {
-                cqsscList.remove(i);
+        for (int i=handledNumbers.size()-1; i>=0; i--) {
+            String number = handledNumbers.get(i);
+
+            if (abxxnV2Filt(resultArray12, 1, 2, number)) {
+                handledNumbers.remove(i);
                 continue;
             }
-            if (abxxnV2Filt(resultArray13, 1, 3, result)) {
-                cqsscList.remove(i);
+            if (abxxnV2Filt(resultArray13, 1, 3, number)) {
+                handledNumbers.remove(i);
                 continue;
             }
-            if (abxxnV2Filt(resultArray14, 1, 4, result)) {
-                cqsscList.remove(i);
+            if (abxxnV2Filt(resultArray14, 1, 4, number)) {
+                handledNumbers.remove(i);
                 continue;
             }
-            if (abxxnV2Filt(resultArray23, 2, 3, result)) {
-                cqsscList.remove(i);
+            if (abxxnV2Filt(resultArray23, 2, 3, number)) {
+                handledNumbers.remove(i);
                 continue;
             }
-            if (abxxnV2Filt(resultArray24, 2, 4, result)) {
-                cqsscList.remove(i);
+            if (abxxnV2Filt(resultArray24, 2, 4, number)) {
+                handledNumbers.remove(i);
                 continue;
             }
-            if (abxxnV2Filt(resultArray34, 3, 4, result)) {
-                cqsscList.remove(i);
+            if (abxxnV2Filt(resultArray34, 3, 4, number)) {
+                handledNumbers.remove(i);
             }
 
         }
 
         StringBuilder sb = new StringBuilder();
-        for (int i=0; i<cqsscList.size(); i++) {
-            sb.append("<p>").append("期数:").append(cqsscList.get(i).getString("no"))
-            .append("   号码:").append(cqsscList.get(i).getString("result")).append("</p>");
+        for (int i=0; i<handledNumbers.size(); i++) {
+            String number = handledNumbers.get(i);
+            sb.append("<p>").append("号码:").append(number).append("</p>");
         }
 
         return sb.toString();
@@ -643,7 +641,7 @@ public class CaipiaoService {
             String filterResult = resultArray.getJSONObject(j).getString("result");
             char[] chars = result.toCharArray();
             char[] filtChars = filterResult.toCharArray();
-            if (chars[a] == filtChars[a] && chars[b] == filtChars[b]) {
+            if (chars[a-1] == filtChars[a] && chars[b-1] == filtChars[b]) {
                 logger.info("abxxnV2Filt remove:{}", result);
                 return true;
             }
