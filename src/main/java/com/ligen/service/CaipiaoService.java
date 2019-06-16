@@ -628,11 +628,12 @@ public class CaipiaoService {
         }
 
         StringBuilder sb = new StringBuilder();
+        sb.append("<p>");
         for (int i=0; i<handledNumbers.size(); i++) {
             String number = handledNumbers.get(i);
-            sb.append("<p>").append("号码:").append(number).append("</p>");
+            sb.append(number).append(" ");
         }
-
+        sb.append("</p>");
         return sb.toString();
     }
 
