@@ -429,36 +429,38 @@ public class CaipiaoService {
      */
     public String notSame(String no, Integer m) {
 
-        int d=0;
-        boolean same = true;
-        List<JSONObject> cqssc = null;
-        while (same) {
-            d += 1;
-            Query query = new Query();
-            query.addCriteria(Criteria.where("no").lte(no));
-            query.fields().include("no").include("result");
-            query.with(new Sort(Sort.Direction.DESC, "no")).limit(m * d);
-            cqssc = mongoTemplate.find(query, JSONObject.class, "cqssc");
-            String last = null;
-            same = false;
-            logger.info("d:{}", d);
-            for (int i=(d-1); i<cqssc.size(); i+=d) {
-                JSONObject json = cqssc.get(i);
-                String res = json.getString("result").substring(0, 1);
-                logger.info("no:{}, res:{}", json.getString("no"), res);
-                if (res.equals(last)) { //出现连续相同的数则d+1
-                    same = true;
-                    break;
+        StringBuilder sb = new StringBuilder();
+
+        for (int index = 1; index <= 5; index++) {
+            int d=0;
+            boolean same = true;
+            List<JSONObject> cqssc = null;
+            while (same) {
+                d += 1;
+                Query query = new Query();
+                query.addCriteria(Criteria.where("no").lte(no));
+                query.fields().include("no").include("result");
+                query.with(new Sort(Sort.Direction.DESC, "no")).limit(m * d);
+                cqssc = mongoTemplate.find(query, JSONObject.class, "cqssc");
+                String last = null;
+                same = false;
+                logger.info("d:{}", d);
+                for (int i=(d-1); i<cqssc.size(); i+=d) {
+                    JSONObject json = cqssc.get(i);
+                    String res = json.getString("result").substring(index-1, index);
+                    logger.info("no:{}, res:{}", json.getString("no"), res);
+                    if (res.equals(last)) { //出现连续相同的数则d+1
+                        same = true;
+                        break;
+                    }
+                    last = res;
                 }
-                last = res;
+            }
+            sb.append("<p>位置").append(index).append(":").append(d).append("</p>");
+            for (int i=(d-1); i<cqssc.size(); i+=d) {
+                sb.append("<p>").append("no:").append(cqssc.get(i).getString("no")).append("  res:").append(cqssc.get(i).getString("result")).append("</p>");
             }
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append("<p>").append(d).append("</p>");
-        for (int i=0; i<cqssc.size(); i+=d) {
-            sb.append("<p>").append("no:").append(cqssc.get(i).getString("no")).append("  res:").append(cqssc.get(i).getString("result")).append("</p>");
-        }
-
         return sb.toString();
     }
 
