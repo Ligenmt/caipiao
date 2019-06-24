@@ -205,7 +205,7 @@ public class CaipiaoController {
     @RequestMapping(value = "algorithm01_pl5", method = RequestMethod.POST)
     @ResponseBody
     public String algorithm01Pl5Post(@RequestParam(value = "no") String no, @RequestParam(value = "count") int count) {
-        return caipiaoService.algorithm01(no, count, "pl5");
+        return caipiaoService.algorithm01Pl5(no, count);
     }
 
     @RequestMapping(value = "abxxn", method = RequestMethod.GET)

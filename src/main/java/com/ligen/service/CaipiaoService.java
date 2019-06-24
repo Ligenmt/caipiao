@@ -561,6 +561,103 @@ public class CaipiaoService {
         return html.toString();
     }
 
+
+    public String algorithm01Pl5(String no, int count) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("no").lte(no));
+        query.with(new Sort(Sort.Direction.DESC, "no")).limit(count);
+        List<JSONObject> pl5List = mongoTemplate.find(query, JSONObject.class, "pl5");
+        StringBuilder html = new StringBuilder();
+
+        String[] lastNo = new String[4];
+        for (JSONObject cqssc : pl5List) {
+            String result = cqssc.getString("result");
+            String currNo = cqssc.getString("no");
+            //第no期开奖号码后四位
+            String a1 = result.substring(0, 1);
+            String a2 = result.substring(1, 2);
+            String a3 = result.substring(2, 3);
+            String a4 = result.substring(3, 4);
+
+            logger.info("algorithm01 第{}期前四位A: {}{}{}{}", currNo, a1, a2, a3, a4);
+            query = new Query();
+            query.addCriteria(Criteria.where("no").lte(currNo));
+            query.with(new Sort(Sort.Direction.DESC, "no")).limit(5000);
+            List<JSONObject> originList = mongoTemplate.find(query, JSONObject.class, "pl5");
+
+            String b1 = null;
+            String b2 = null;
+            String b3 = null;
+            String b4 = null;
+
+            for (int i=1; i<originList.size(); i++) {
+                JSONObject origin = originList.get(i);
+                String originResult = origin.getString("result");
+                if (b1 == null && originResult.substring(0, 1).equals(a1)) {
+                    b1 = originList.get(i-1).getString("result").substring(1);
+                }
+                if (b2 == null && originResult.substring(1, 2).equals(a2)) {
+                    b2 = originList.get(i-1).getString("result").substring(1);
+                }
+                if (b3 == null && originResult.substring(2, 3).equals(a3)) {
+                    b3 = originList.get(i-1).getString("result").substring(1);
+                }
+                if (b4 == null && originResult.substring(3, 4).equals(a4)) {
+                    b4 = originList.get(i-1).getString("result").substring(1);
+                }
+                if (b1 != null && b2 != null && b3 != null && b4 != null) {
+                    break;
+                }
+            }
+            logger.info("algorithm01 第{}期B: b1:{} b2:{} b3:{} b4:{}", currNo, b1, b2, b3, b4);
+            String c1 = b1.substring(0,1) + b2.substring(0,1) + b3.substring(0,1) + b4.substring(0,1);
+            String c2 = b1.substring(1,2) + b2.substring(1,2) + b3.substring(1,2) + b4.substring(1,2);
+            String c3 = b1.substring(2,3) + b2.substring(2,3) + b3.substring(2,3) + b4.substring(2,3);
+            String c4 = b1.substring(3,4) + b2.substring(3,4) + b3.substring(3,4) + b4.substring(3,4);
+            logger.info("algorithm01 第{}期C: c1:{} c2:{} c3:{} c4:{}", currNo, c1, c2, c3, c4);
+            JSONArray d1Array = orderTailCalculate(0, c1, 30000, "pl5");
+            JSONArray d2Array = orderTailCalculate(1, c2, 30000, "pl5");
+            JSONArray d3Array = orderTailCalculate(2, c3, 30000, "pl5");
+            JSONArray d4Array = orderTailCalculate(3, c4, 30000, "pl5");
+
+            String d1 = "x";
+            String d2 = "x";
+            String d3 = "x";
+            String d4 = "x";
+            if (d1Array.size() > 0) {
+                d1 = d1Array.getJSONArray(0).getJSONObject(0).getString("result");
+                logger.info("algorithm01 第{}期 d1:{}", currNo, d1);
+            }
+            if (d2Array.size() > 0) {
+                d2 = d2Array.getJSONArray(0).getJSONObject(0).getString("result");
+                logger.info("algorithm01 第{}期 d2:{}", currNo, d2);
+            }
+            if (d3Array.size() > 0) {
+                d3 = d3Array.getJSONArray(0).getJSONObject(0).getString("result");
+                logger.info("algorithm01 第{}期 d3:{}", currNo, d3);
+            }
+            if (d4Array.size() > 0) {
+                d4 = d4Array.getJSONArray(0).getJSONObject(0).getString("result");
+                logger.info("algorithm01 第{}期 d4:{}", currNo, d4);
+            }
+            String checkRight = "无";
+            String d = d1 + d2 + d3 + d4;
+            if (lastNo[0] != null) {
+                checkRight = "对";
+                if (lastNo[0].equals(d1) || lastNo[1].equals(d2) || lastNo[2].equals(d3) || lastNo[3].equals(d4)) {
+                    checkRight = "错";
+                }
+            }
+            lastNo[0] = a1;
+            lastNo[1] = a2;
+            lastNo[2] = a3;
+            lastNo[3] = a4;
+            html.append("<p>期号：").append(cqssc.getString("no")).append("  开奖号码：").append(result).append(" 结果：" +  d).append("  和上一期开奖号码比对：").append(checkRight).append("</p>");
+
+        }
+        return html.toString();
+    }
+
     public String abxxn(String code, int count) {
 
         Query query = new Query();
