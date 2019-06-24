@@ -363,7 +363,7 @@ public class CaipiaoService {
             }
 
         }
-        logger.info("order_tail finish calculate count:{}, timeuse:{}", resultArray.size(), System.currentTimeMillis() - start);
+        logger.info("order_tail finish calculate count:{}, timeuse:{}, value:{}", resultArray.size(), System.currentTimeMillis() - start, resultArray);
         return resultArray;
     }
 
