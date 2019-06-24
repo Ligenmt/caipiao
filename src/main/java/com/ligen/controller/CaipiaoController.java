@@ -208,6 +208,17 @@ public class CaipiaoController {
         return caipiaoService.algorithm01Pl5(no, count);
     }
 
+    @RequestMapping(value = "algorithm01_pl52", method = RequestMethod.GET)
+    public String algorithm01Pl52Get() {
+        return "algorithm01_pl52";
+    }
+
+    @RequestMapping(value = "algorithm01_pl52", method = RequestMethod.POST)
+    @ResponseBody
+    public String algorithm01Pl52Post(@RequestParam(value = "no") String no, @RequestParam(value = "count") int count) {
+        return caipiaoService.algorithm01(no, count, "pl5");
+    }
+
     @RequestMapping(value = "abxxn", method = RequestMethod.GET)
     public String abxxnGet() {
         return "abxxn";
@@ -219,7 +230,6 @@ public class CaipiaoController {
         String abxxn = caipiaoService.abxxn(code, count);
         return abxxn;
     }
-
 
     @RequestMapping(value = "abxxnv2", method = RequestMethod.GET)
     public String abxxnV2Get() {
