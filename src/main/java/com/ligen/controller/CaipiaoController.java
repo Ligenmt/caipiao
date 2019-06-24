@@ -144,8 +144,9 @@ public class CaipiaoController {
     @ResponseBody
     public String orderTailPost(@RequestParam(value = "index") int index,
                                 @RequestParam(value = "code") String code,
-                                @RequestParam(value = "count", required = false) Integer count) {
-        String result = caipiaoService.orderTail(index, code, count);
+                                @RequestParam(value = "count", required = false) Integer count,
+                                @RequestParam(value = "collection", required = false, defaultValue = "cqssc") String collection) {
+        String result = caipiaoService.orderTail(index, code, count, collection);
         return result;
     }
 

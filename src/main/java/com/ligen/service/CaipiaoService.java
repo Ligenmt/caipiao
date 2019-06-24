@@ -313,9 +313,9 @@ public class CaipiaoService {
      * @param count
      * @return
      */
-    public String orderTail(int index, String code, Integer count) {
+    public String orderTail(int index, String code, Integer count, String collection) {
 
-        JSONArray result = orderTailCalculate(index, code, count, "cqssc");
+        JSONArray result = orderTailCalculate(index, code, count, collection);
         String html = orderTailRender(result);
         return html;
     }
