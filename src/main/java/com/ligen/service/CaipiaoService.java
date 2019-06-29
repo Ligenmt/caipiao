@@ -427,7 +427,7 @@ public class CaipiaoService {
      * @param m 连续多少期
      * @return
      */
-    public String notSame(String no, Integer m) {
+    public String notSame(String no, Integer m, String collection) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -441,7 +441,7 @@ public class CaipiaoService {
                 query.addCriteria(Criteria.where("no").lte(no));
                 query.fields().include("no").include("result");
                 query.with(new Sort(Sort.Direction.DESC, "no")).limit(m * d);
-                cqssc = mongoTemplate.find(query, JSONObject.class, "cqssc");
+                cqssc = mongoTemplate.find(query, JSONObject.class, collection);
                 String last = null;
                 same = false;
                 logger.info("d:{}", d);

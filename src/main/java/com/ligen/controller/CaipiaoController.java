@@ -171,8 +171,9 @@ public class CaipiaoController {
     @RequestMapping(value = "not_same", method = RequestMethod.POST)
     @ResponseBody
     public String notSamePost(@RequestParam(value = "no") String no,
-                                    @RequestParam(value = "m") Integer m) {
-        String result = caipiaoService.notSame(no, m);
+                                @RequestParam(value = "m") Integer m,
+                                @RequestParam(value = "no") String collection) {
+        String result = caipiaoService.notSame(no, m, collection);
         return result;
     }
 
