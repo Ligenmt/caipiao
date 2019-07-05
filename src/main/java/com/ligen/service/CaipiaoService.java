@@ -849,11 +849,12 @@ public class CaipiaoService {
         for (int i=1; i<cqsscList.size(); i++) {
             String result = cqsscList.get(i).getString("result");
             if (result.endsWith(code)) {
+                JSONObject output = cqsscList.get(i-1);
                 sb.append("<p>")
                         .append("期号:")
-                        .append(cqsscList.get(i).getString("no"))
+                        .append(output.getString("no"))
                         .append("   号码：")
-                        .append(result)
+                        .append(output.getString("result"))
                         .append("</p>");
             }
         }
