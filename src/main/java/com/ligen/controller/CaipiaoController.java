@@ -233,6 +233,18 @@ public class CaipiaoController {
         return abxxn;
     }
 
+    @RequestMapping(value = "abxxn2", method = RequestMethod.GET)
+    public String abxxn2Get() {
+        return "abxxn2";
+    }
+
+    @RequestMapping(value = "abxxn2", method = RequestMethod.POST)
+    @ResponseBody
+    public String abxxn2Post(@RequestParam(value = "code") String code) {
+        String abxxn2 = caipiaoService.abxxn2(code);
+        return abxxn2;
+    }
+
     @RequestMapping(value = "abxxnv2", method = RequestMethod.GET)
     public String abxxnV2Get() {
         return "abxxnv2";

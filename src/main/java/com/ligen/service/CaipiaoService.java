@@ -838,4 +838,25 @@ public class CaipiaoService {
     }
 
 
+    public String abxxn2(String code) {
+
+        Query query = new Query();
+        query.fields().include("no").include("result");
+        query.with(new Sort(Sort.Direction.DESC, "no")).limit(20000);
+        List<JSONObject> cqsscList = mongoTemplate.find(query, JSONObject.class, "cqssc");
+
+        StringBuilder sb = new StringBuilder();
+        for (int i=1; i<cqsscList.size(); i++) {
+            String result = cqsscList.get(i).getString("result");
+            if (result.endsWith(code)) {
+                sb.append("<p>")
+                        .append("期号:")
+                        .append(cqsscList.get(i).getString("no"))
+                        .append("   号码：")
+                        .append(result)
+                        .append("</p>");
+            }
+        }
+        return sb.toString();
+    }
 }
