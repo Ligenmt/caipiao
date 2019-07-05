@@ -172,7 +172,7 @@ public class CaipiaoController {
     @ResponseBody
     public String notSamePost(@RequestParam(value = "no") String no,
                                 @RequestParam(value = "m") Integer m,
-                                @RequestParam(value = "no") String collection) {
+                                @RequestParam(value = "collection") String collection) {
         String result = caipiaoService.notSame(no, m, collection);
         return result;
     }
