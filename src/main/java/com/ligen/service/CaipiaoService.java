@@ -842,7 +842,7 @@ public class CaipiaoService {
 
         Query query = new Query();
         query.fields().include("no").include("result");
-        query.with(new Sort(Sort.Direction.DESC, "no")).limit(20000);
+        query.with(new Sort(Sort.Direction.DESC, "no")).limit(60000);
         List<JSONObject> cqsscList = mongoTemplate.find(query, JSONObject.class, "cqssc");
 
         StringBuilder sb = new StringBuilder();
