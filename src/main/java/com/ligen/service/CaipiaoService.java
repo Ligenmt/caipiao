@@ -477,6 +477,7 @@ public class CaipiaoService {
         int d=0;
         boolean same = true;
         List<JSONObject> cqssc = null;
+        String lastRepeatHtml = null;
         while (same) {
             d += 1;
             Query query = new Query();
@@ -485,9 +486,10 @@ public class CaipiaoService {
             query.with(new Sort(Sort.Direction.DESC, "no")).limit(m * d + d);
             cqssc = mongoTemplate.find(query, JSONObject.class, collection);
             String last = null;
+            String latest = cqssc.get(cqssc.size()-1).getString("result").substring(index-1, index);
             same = false;
             logger.info("d:{}", d);
-            for (int i=(d-1); i<cqssc.size(); i+=d) {
+            for (int i=(d-1); i<cqssc.size()-d; i+=d) {
                 JSONObject json = cqssc.get(i);
                 String res = json.getString("result").substring(index-1, index);
                 logger.info("no:{}, res:{}", json.getString("no"), res);
@@ -497,11 +499,23 @@ public class CaipiaoService {
                 }
                 last = res;
             }
+            if (same) {
+                continue;
+            }
+            //n位和n+d位相同
+            if (last.equals(latest)) {
+                lastRepeatHtml = "<p>no:" +  cqssc.get(cqssc.size()-1).getString("no") + " res:" + cqssc.get(cqssc.size()-1).getString("result") + "</p>";
+            } else {
+                same = true;
+            }
+
         }
-        sb.append("<p>位置").append(index).append(":").append(d).append("</p>");
-        for (int i=(d-1); i<cqssc.size(); i+=d) {
+        sb.append("<p>位置").append(index).append("  d:").append(d).append(" m:").append(m).append("</p>");
+        for (int i=(d-1); i<cqssc.size()-d; i+=d) {
             sb.append("<p>").append("no:").append(cqssc.get(i).getString("no")).append("  res:").append(cqssc.get(i).getString("result")).append("</p>");
         }
+        sb.append("<p>m+1位：</p>");
+        sb.append(lastRepeatHtml);
         return sb.toString();
     }
 
