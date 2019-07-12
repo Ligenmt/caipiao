@@ -177,6 +177,21 @@ public class CaipiaoController {
         return result;
     }
 
+    @RequestMapping(value = "not_same_plus", method = RequestMethod.GET)
+    public String notSamePlusGet() {
+        return "not_same_plus";
+    }
+
+    @RequestMapping(value = "not_same_plus", method = RequestMethod.POST)
+    @ResponseBody
+    public String notSamePlusPost(@RequestParam(value = "no") String no,
+                              @RequestParam(value = "m") Integer m,
+                              @RequestParam(value = "index") Integer index,
+                              @RequestParam(value = "collection") String collection) {
+        String result = caipiaoService.notSamePlus(no, m, index, collection);
+        return result;
+    }
+
     @RequestMapping(value = "algorithm01", method = RequestMethod.GET)
     public String algorithm01Get() {
         return "algorithm01";

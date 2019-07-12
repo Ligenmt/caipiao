@@ -425,7 +425,7 @@ public class CaipiaoService {
      * 百里挑一
      * @param no 开始期数
      * @param m 连续多少期
-     * @return
+     * @return d 相邻都不相同的最大间隔
      */
     public String notSame(String no, Integer m, String collection) {
 
@@ -460,6 +460,47 @@ public class CaipiaoService {
             for (int i=(d-1); i<cqssc.size(); i+=d) {
                 sb.append("<p>").append("no:").append(cqssc.get(i).getString("no")).append("  res:").append(cqssc.get(i).getString("result")).append("</p>");
             }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 百里挑一
+     * @param no 开始期数
+     * @param m 连续多少期
+     * @param index 位置
+     * @return d 相邻都不相同的最大间隔
+     */
+    public String notSamePlus(String no, Integer m, Integer index, String collection) {
+
+        StringBuilder sb = new StringBuilder();
+        int d=0;
+        boolean same = true;
+        List<JSONObject> cqssc = null;
+        while (same) {
+            d += 1;
+            Query query = new Query();
+            query.addCriteria(Criteria.where("no").lte(no));
+            query.fields().include("no").include("result");
+            query.with(new Sort(Sort.Direction.DESC, "no")).limit(m * d + d);
+            cqssc = mongoTemplate.find(query, JSONObject.class, collection);
+            String last = null;
+            same = false;
+            logger.info("d:{}", d);
+            for (int i=(d-1); i<cqssc.size(); i+=d) {
+                JSONObject json = cqssc.get(i);
+                String res = json.getString("result").substring(index-1, index);
+                logger.info("no:{}, res:{}", json.getString("no"), res);
+                if (res.equals(last)) { //出现连续相同的数则d+1
+                    same = true;
+                    break;
+                }
+                last = res;
+            }
+        }
+        sb.append("<p>位置").append(index).append(":").append(d).append("</p>");
+        for (int i=(d-1); i<cqssc.size(); i+=d) {
+            sb.append("<p>").append("no:").append(cqssc.get(i).getString("no")).append("  res:").append(cqssc.get(i).getString("result")).append("</p>");
         }
         return sb.toString();
     }
