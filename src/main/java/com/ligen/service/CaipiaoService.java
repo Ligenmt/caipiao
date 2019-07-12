@@ -471,7 +471,7 @@ public class CaipiaoService {
      * @param index 位置
      * @return d 相邻都不相同的最大间隔
      */
-    public String notSamePlus(String no, Integer m, Integer index, String collection) {
+    public JSONObject notSamePlus(String no, Integer m, Integer index, String collection) {
 
         StringBuilder sb = new StringBuilder();
         int d=0;
@@ -488,11 +488,11 @@ public class CaipiaoService {
             String last = null;
             String latest = cqssc.get(cqssc.size()-1).getString("result").substring(index-1, index);
             same = false;
-            logger.info("d:{}", d);
+//            logger.info("d:{}", d);
             for (int i=(d-1); i<cqssc.size()-d; i+=d) {
                 JSONObject json = cqssc.get(i);
                 String res = json.getString("result").substring(index-1, index);
-                logger.info("no:{}, res:{}", json.getString("no"), res);
+//                logger.info("no:{}, res:{}", json.getString("no"), res);
                 if (res.equals(last)) { //出现连续相同的数则d+1
                     same = true;
                     break;
@@ -508,15 +508,66 @@ public class CaipiaoService {
             } else {
                 same = true;
             }
+        }
+        JSONObject result = new JSONObject();
+        result.put("list", cqssc);
+        result.put("d", d);
+        result.put("lastRepeatHtml", lastRepeatHtml);
+//        sb.append("<p>位置").append(index).append("  d:").append(d).append(" m:").append(m).append("</p>");
+//        for (int i=(d-1); i<cqssc.size()-d; i+=d) {
+//            sb.append("<p>").append("no:").append(cqssc.get(i).getString("no")).append("  res:").append(cqssc.get(i).getString("result")).append("</p>");
+//        }
+//        sb.append("<p>m+1位：</p>");
+//        sb.append(lastRepeatHtml);
+        return result;
+    }
 
+    public String notSameV3(String no, int count) {
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("no").lte(no));
+        query.with(new Sort(Sort.Direction.DESC, "no")).limit(count + 1);
+        List<JSONObject> list = mongoTemplate.find(query, JSONObject.class, "cqssc");
+        StringBuilder sb = new StringBuilder();
+        for (int i=0; i<count; i++) {
+            String thisNo = list.get(i).getString("no");
+            String code2 = calculateNotSameV3(thisNo, 2);
+            String code3 = calculateNotSameV3(thisNo, 3);
+            String code4 = calculateNotSameV3(thisNo, 4);
+            String code5 = calculateNotSameV3(thisNo, 5);
+            String code = code2 + code3 + code4 + code5;
+            String lastResult = list.get(i+1).getString("result");
+            String lastNo = list.get(i+1).getString("no");
+            logger.info("{}期计算结果:{}, {}期号码:{}", thisNo, code, lastNo, lastResult);
+            sb.append("<p>").append(thisNo).append("期计算结果:").append(code).append(", ").append(lastNo).append("期号码:").append(lastResult).append("</p>");
         }
-        sb.append("<p>位置").append(index).append("  d:").append(d).append(" m:").append(m).append("</p>");
-        for (int i=(d-1); i<cqssc.size()-d; i+=d) {
-            sb.append("<p>").append("no:").append(cqssc.get(i).getString("no")).append("  res:").append(cqssc.get(i).getString("result")).append("</p>");
-        }
-        sb.append("<p>m+1位：</p>");
-        sb.append(lastRepeatHtml);
         return sb.toString();
+    }
+
+    public String calculateNotSameV3(String no, int index) {
+        StringBuilder sb = new StringBuilder();
+        int m = 1;
+        JSONObject numberMap = new JSONObject();
+        while (true) {
+            JSONObject notSamePlus = notSamePlus(no, m, index, "cqssc");
+            List<JSONObject> list = (List<JSONObject>) notSamePlus.get("list");
+            int d = notSamePlus.getIntValue("d");
+            String first = list.get(d-1).getString("result");
+            first = first.substring(index-1, index);
+            sb.append(first);
+            numberMap.put(first, "ok");
+            logger.info("no:{},index:{},m:{},d:{},size:{},sb:{}", no, index, m, d, numberMap.size(), sb.toString());
+            if (numberMap.size() == 10) {
+                logger.info("last:{}", first);
+                return first;
+            }
+            m += 1;
+            if (m >= 50) {
+                logger.info("m is too large");
+                break;
+            }
+        }
+        return null;
     }
 
     public String algorithm01(String no, int count, String collection) {

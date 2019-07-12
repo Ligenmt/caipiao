@@ -1,5 +1,6 @@
 package com.ligen.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ligen.service.CaipiaoService;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * Created by ligen on 2018/3/7.
@@ -188,8 +190,31 @@ public class CaipiaoController {
                               @RequestParam(value = "m") Integer m,
                               @RequestParam(value = "index") Integer index,
                               @RequestParam(value = "collection") String collection) {
-        String result = caipiaoService.notSamePlus(no, m, index, collection);
-        return result;
+        JSONObject result = caipiaoService.notSamePlus(no, m, index, collection);
+        int d = result.getIntValue("d");
+        List<JSONObject> cqssc = (List<JSONObject>) result.get("list");
+        String lastRepeatHtml = result.getString("lastRepeatHtml");
+        StringBuilder sb = new StringBuilder();
+        sb.append("<p>位置").append(index).append("  d:").append(d).append(" m:").append(m).append("</p>");
+        for (int i=(d-1); i<cqssc.size()-d; i+=d) {
+            sb.append("<p>").append("no:").append(cqssc.get(i).getString("no")).append("  res:").append(cqssc.get(i).getString("result")).append("</p>");
+        }
+        sb.append("<p>m+1位：</p>");
+        sb.append(lastRepeatHtml);
+        return sb.toString();
+    }
+
+    @RequestMapping(value = "not_same_v3", method = RequestMethod.GET)
+    public String notSameV3Get() {
+        return "not_same_v3";
+    }
+
+    @RequestMapping(value = "not_same_v3", method = RequestMethod.POST)
+    @ResponseBody
+    public String notSameV3Post(@RequestParam(value = "no") String no,
+                              @RequestParam(value = "count") Integer count) {
+        String sb = caipiaoService.notSameV3(no, count);
+        return sb;
     }
 
     @RequestMapping(value = "algorithm01", method = RequestMethod.GET)
