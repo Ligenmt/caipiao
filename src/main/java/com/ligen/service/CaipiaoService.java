@@ -557,17 +557,21 @@ public class CaipiaoService {
             sb.append(first);
             numberMap.put(first, "ok");
             logger.info("no:{},index:{},m:{},d:{},size:{},sb:{}", no, index, m, d, numberMap.size(), sb.toString());
-            if (numberMap.size() == 10) {
-                logger.info("last:{}", first);
-                return first;
+            if (numberMap.size() == 9) {
+                String temp = "1234567890";
+                for (String key : numberMap.keySet()) {
+                    temp = temp.replace(key, "");
+                }
+                logger.info("last:{}", temp);
+                return temp;
             }
             m += 1;
-            if (m >= 50) {
+            if (m >= 39) {
                 logger.info("m is too large");
                 break;
             }
         }
-        return null;
+        return "x";
     }
 
     public String algorithm01(String no, int count, String collection) {
