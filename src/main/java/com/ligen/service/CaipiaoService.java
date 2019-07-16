@@ -532,13 +532,21 @@ public class CaipiaoService {
         for (int i=0; i<count; i++) {
             String thisNo = list.get(i).getString("no");
             String code2 = calculateNotSameV3(thisNo, 2);
+            String code2Last = code2.substring(code2.length()-1);
             String code3 = calculateNotSameV3(thisNo, 3);
+            String code3Last = code3.substring(code3.length()-1);
             String code4 = calculateNotSameV3(thisNo, 4);
+            String code4Last = code4.substring(code4.length()-1);
             String code5 = calculateNotSameV3(thisNo, 5);
-            String code = code2 + code3 + code4 + code5;
+            String code5Last = code5.substring(code5.length()-1);
+            String code = code2Last + code3Last + code4Last + code5Last;
             String lastResult = list.get(i+1).getString("result");
             String lastNo = list.get(i+1).getString("no");
             logger.info("{}期计算结果:{}, {}期号码:{}", thisNo, code, lastNo, lastResult);
+            sb.append("<p>位置2数序列:").append(code2).append("</p>");
+            sb.append("<p>位置3数序列:").append(code3).append("</p>");
+            sb.append("<p>位置4数序列:").append(code4).append("</p>");
+            sb.append("<p>位置5数序列:").append(code5).append("</p>");
             sb.append("<p>").append(thisNo).append("期计算结果:").append(code).append(", ").append(lastNo).append("期号码:").append(lastResult).append("</p>");
         }
         return sb.toString();
@@ -563,7 +571,9 @@ public class CaipiaoService {
                     temp = temp.replace(key, "");
                 }
                 logger.info("last:{}", temp);
-                return temp;
+                sb.append(temp);
+//                return temp;
+                return sb.toString();
             }
             m += 1;
             if (m >= 39) {
