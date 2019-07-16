@@ -562,8 +562,10 @@ public class CaipiaoService {
             int d = notSamePlus.getIntValue("d");
             String first = list.get(d-1).getString("result");
             first = first.substring(index-1, index);
-            sb.append(first);
-            numberMap.put(first, "ok");
+            if (!numberMap.containsKey(first)) {
+                sb.append(first);
+                numberMap.put(first, "ok");
+            }
             logger.info("no:{},index:{},m:{},d:{},size:{},sb:{}", no, index, m, d, numberMap.size(), sb.toString());
             if (numberMap.size() == 9) {
                 String temp = "1234567890";
