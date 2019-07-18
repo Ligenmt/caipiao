@@ -548,7 +548,12 @@ public class CaipiaoService {
             sb.append("<p>位置4数序列:").append(code4).append("</p>");
             sb.append("<p>位置5数序列:").append(code5).append("</p>");
             sb.append("<p>").append(thisNo).append("期计算结果:").append(code).append(", ").append(lastNo).append("期号码:").append(lastResult).append("</p>");
+            for (int j=0; j<10; j++) {
+                String colj = code2.substring(j, j+1) + code3.substring(j, j+1) + code4.substring(j, j+1) + code5.substring(j, j+1);
+                sb.append("<p>").append(colj).append("</p>");
+            }
         }
+
         return sb.toString();
     }
 
@@ -583,7 +588,8 @@ public class CaipiaoService {
                 break;
             }
         }
-        return "x";
+        sb.append("x");
+        return sb.toString();
     }
 
     public String algorithm01(String no, int count, String collection) {
