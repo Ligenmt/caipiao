@@ -280,8 +280,8 @@ public class CaipiaoController {
 
     @RequestMapping(value = "abxxn2", method = RequestMethod.POST)
     @ResponseBody
-    public String abxxn2Post(@RequestParam(value = "code") String code) {
-        String abxxn2 = caipiaoService.abxxn2(code);
+    public String abxxn2Post(@RequestParam(value = "no") String no, @RequestParam(value = "code") String code) {
+        String abxxn2 = caipiaoService.abxxn2(no, code);
         return abxxn2;
     }
 

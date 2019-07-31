@@ -968,9 +968,10 @@ public class CaipiaoService {
     }
 
 
-    public String abxxn2(String code) {
+    public String abxxn2(String startNo, String code) {
 
         Query query = new Query();
+        query.addCriteria(Criteria.where("no").lte(startNo));
         query.fields().include("no").include("result");
         query.with(new Sort(Sort.Direction.DESC, "no")).limit(60000);
         List<JSONObject> cqsscList = mongoTemplate.find(query, JSONObject.class, "cqssc");
