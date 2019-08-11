@@ -293,8 +293,8 @@ public class CaipiaoController {
 
     @RequestMapping(value = "abxxn2", method = RequestMethod.POST)
     @ResponseBody
-    public String abxxn2Post(@RequestParam(value = "no") String no, @RequestParam(value = "code") String code) {
-        String abxxn2 = caipiaoService.abxxn2(no, code);
+    public String abxxn2Post(@RequestParam(value = "code") String code) {
+        String abxxn2 = caipiaoService.abxxn2(code);
         return abxxn2;
     }
 
@@ -305,8 +305,8 @@ public class CaipiaoController {
 
     @RequestMapping(value = "abxxnv2", method = RequestMethod.POST)
     @ResponseBody
-    public String abxxnV2Post(@RequestParam(value = "code") String code, @RequestParam(value = "count") int count) {
-        String abxxn = caipiaoService.abxxnV2(code, count);
+    public String abxxnV2Post(@RequestParam(value = "no") String no, @RequestParam(value = "code") String code, @RequestParam(value = "count") int count) {
+        String abxxn = caipiaoService.abxxnV2(no, code, count);
         return abxxn;
     }
 }

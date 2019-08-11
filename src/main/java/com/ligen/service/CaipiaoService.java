@@ -845,9 +845,10 @@ public class CaipiaoService {
 
     }
 
-    public String abxxnV2(String code, int count) {
+    public String abxxnV2(String no, String code, int count) {
 
         Query query = new Query();
+        query.addCriteria(Criteria.where("no").lte(no));
         query.fields().include("no").include("result");
         query.with(new Sort(Sort.Direction.DESC, "no")).limit(10000);
         List<JSONObject> cqsscList = mongoTemplate.find(query, JSONObject.class, "cqssc");
@@ -951,6 +952,7 @@ public class CaipiaoService {
         sb.append("<p>第1,2位").append("</p>");
         for (int i=0; i<resultArray12.size(); i++) {
             sb.append("<p>")
+                    .append(String.format("%03d", i))
                     .append("期号:")
                     .append(resultArray12.getJSONObject(i).getString("no"))
                     .append("   号码：")
@@ -960,6 +962,7 @@ public class CaipiaoService {
         sb.append("<p>第1,3位").append("</p>");
         for (int i=0; i<resultArray13.size(); i++) {
             sb.append("<p>")
+                    .append(String.format("%03d", i))
                     .append("期号:")
                     .append(resultArray13.getJSONObject(i).getString("no"))
                     .append("   号码：")
@@ -969,6 +972,7 @@ public class CaipiaoService {
         sb.append("<p>第1,4位").append("</p>");
         for (int i=0; i<resultArray14.size(); i++) {
             sb.append("<p>")
+                    .append(String.format("%03d", i))
                     .append("期号:")
                     .append(resultArray14.getJSONObject(i).getString("no"))
                     .append("   号码：")
@@ -978,6 +982,7 @@ public class CaipiaoService {
         sb.append("<p>第2,3位").append("</p>");
         for (int i=0; i<resultArray23.size(); i++) {
             sb.append("<p>")
+                    .append(String.format("%03d", i))
                     .append("期号:")
                     .append(resultArray23.getJSONObject(i).getString("no"))
                     .append("   号码：")
@@ -987,6 +992,7 @@ public class CaipiaoService {
         sb.append("<p>第2,4位").append("</p>");
         for (int i=0; i<resultArray24.size(); i++) {
             sb.append("<p>")
+                    .append(String.format("%03d", i))
                     .append("期号:")
                     .append(resultArray24.getJSONObject(i).getString("no"))
                     .append("   号码：")
@@ -996,6 +1002,7 @@ public class CaipiaoService {
         sb.append("<p>第3,4位").append("</p>");
         for (int i=0; i<resultArray34.size(); i++) {
             sb.append("<p>")
+                    .append(String.format("%03d", i))
                     .append("期号:")
                     .append(resultArray34.getJSONObject(i).getString("no"))
                     .append("   号码：")
@@ -1006,10 +1013,9 @@ public class CaipiaoService {
     }
 
 
-    public String abxxn2(String startNo, String code) {
+    public String abxxn2(String code) {
 
         Query query = new Query();
-        query.addCriteria(Criteria.where("no").lte(startNo));
         query.fields().include("no").include("result");
         query.with(new Sort(Sort.Direction.DESC, "no")).limit(60000);
         List<JSONObject> cqsscList = mongoTemplate.find(query, JSONObject.class, "cqssc");
