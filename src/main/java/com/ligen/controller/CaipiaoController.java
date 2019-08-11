@@ -161,8 +161,8 @@ public class CaipiaoController {
     @ResponseBody
     public String orderTailV2Post(@RequestParam(value = "count") Integer count,
                                   @RequestParam(value = "no") String no) {
-        caipiaoService.orderTailV2(no, count);
-        return "order_tail_v2";
+        String result = caipiaoService.orderTailV2(no, count);
+        return result;
     }
 
     @RequestMapping(value = "qishu_intertval", method = RequestMethod.GET)
