@@ -349,7 +349,7 @@ public class CaipiaoService {
                 arraySize = calculatedArray.size();
             }
             for (int i=0; i<arraySize; i++) {
-                String s = calculatedArray.getJSONArray(0).getJSONObject(0).getString("result");
+                String s = calculatedArray.getJSONArray(i).getJSONObject(0).getString("result");
                 code.append(s);
             }
             logger.info("orderTailCalculateV2 index:{}, code:{}", index, code);
