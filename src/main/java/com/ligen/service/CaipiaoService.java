@@ -320,6 +320,44 @@ public class CaipiaoService {
         return html;
     }
 
+    public String orderTailV2(String no, int count) {
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("no").lte(no));
+        query.with(new Sort(Sort.Direction.DESC, "_id")).limit(4);
+        List<JSONObject> startList = mongoTemplate.find(query, JSONObject.class, "cqssc");
+        //千位
+        String a1 = orderTailCalculateV2(1, startList, count);
+        String a2 = orderTailCalculateV2(2, startList, count);
+        String a3 = orderTailCalculateV2(3, startList, count);
+        String a4 = orderTailCalculateV2(4, startList, count);
+
+        return "a1:" + a1 + " a2:" + a2 + " a3:" + a3 + " a4:" + a4;
+    }
+
+    public String orderTailCalculateV2(int index, List<JSONObject> startList, int count) {
+        StringBuilder code = new StringBuilder();
+        for (int i=0; i<4; i++) {
+            String result = startList.get(i).getString("result").substring(index, index+1);
+            code.append(result);
+        }
+        while (code.toString().length() >= 4) {
+            JSONArray calculatedArray = orderTailCalculate(index, code.toString(), count, "cqssc");
+            code = new StringBuilder();
+            int arraySize = 4;
+            if (calculatedArray.size() < 4) {
+                arraySize = calculatedArray.size();
+            }
+            for (int i=0; i<arraySize; i++) {
+                String s = calculatedArray.getJSONArray(0).getJSONObject(0).getString("result");
+                code.append(s);
+            }
+            logger.info("orderTailCalculateV2 index:{}, code:{}", index, code);
+        }
+
+        return code.toString();
+    }
+
     public JSONArray orderTailCalculate(int index, String code, Integer count, String collection) {
         long start = System.currentTimeMillis();
         if (count == null) {

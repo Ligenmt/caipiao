@@ -152,6 +152,19 @@ public class CaipiaoController {
         return result;
     }
 
+    @RequestMapping(value = "order_tail_v2", method = RequestMethod.GET)
+    public String orderTailV2Get() {
+        return "order_tail_v2";
+    }
+
+    @RequestMapping(value = "order_tail_v2", method = RequestMethod.POST)
+    @ResponseBody
+    public String orderTailV2Post(@RequestParam(value = "count") Integer count,
+                                  @RequestParam(value = "no") String no) {
+        caipiaoService.orderTailV2(no, count);
+        return "order_tail_v2";
+    }
+
     @RequestMapping(value = "qishu_intertval", method = RequestMethod.GET)
     public String qishuIntervalGet() {
         return "qishu_intertval";
