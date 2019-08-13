@@ -315,7 +315,7 @@ public class CaipiaoService {
      */
     public String orderTail(int index, String code, Integer count, String collection) {
 
-        JSONArray result = orderTailCalculate(index, code, count, collection);
+        JSONArray result = orderTailCalculate(index, null, code, count, collection);
         String html = orderTailRender(result);
         return html;
     }
@@ -327,22 +327,22 @@ public class CaipiaoService {
         query.with(new Sort(Sort.Direction.DESC, "_id")).limit(4);
         List<JSONObject> startList = mongoTemplate.find(query, JSONObject.class, "cqssc");
         //千位
-        String a1 = orderTailCalculateV2(1, startList, count);
-        String a2 = orderTailCalculateV2(2, startList, count);
-        String a3 = orderTailCalculateV2(3, startList, count);
-        String a4 = orderTailCalculateV2(4, startList, count);
+        String a1 = orderTailCalculateV2(1, no, startList, count);
+        String a2 = orderTailCalculateV2(2, no, startList, count);
+        String a3 = orderTailCalculateV2(3, no, startList, count);
+        String a4 = orderTailCalculateV2(4, no, startList, count);
 
         return "a1:" + a1 + " a2:" + a2 + " a3:" + a3 + " a4:" + a4;
     }
 
-    public String orderTailCalculateV2(int index, List<JSONObject> startList, int count) {
+    public String orderTailCalculateV2(int index, String no, List<JSONObject> startList, int count) {
         StringBuilder code = new StringBuilder();
         for (int i=0; i<4; i++) {
             String result = startList.get(i).getString("result").substring(index, index+1);
             code.append(result);
         }
         while (code.toString().length() >= 4) {
-            JSONArray calculatedArray = orderTailCalculate(index, code.toString(), count, "cqssc");
+            JSONArray calculatedArray = orderTailCalculate(index, no, code.toString(), count, "cqssc");
             code = new StringBuilder();
             int arraySize = 4;
             if (calculatedArray.size() < 4) {
@@ -358,7 +358,7 @@ public class CaipiaoService {
         return code.toString();
     }
 
-    public JSONArray orderTailCalculate(int index, String code, Integer count, String collection) {
+    public JSONArray orderTailCalculate(int index, String no, String code, Integer count, String collection) {
         long start = System.currentTimeMillis();
         if (count == null) {
             count = 5000;
@@ -367,6 +367,9 @@ public class CaipiaoService {
         char[] chars = code.toCharArray();
 
         Query query = new Query();
+        if (no != null) {
+            query.addCriteria(Criteria.where("no").lte(no));
+        }
         query.with(new Sort(Sort.Direction.DESC, "_id")).limit(count);
         List<JSONObject> recentNumbers = mongoTemplate.find(query, JSONObject.class, collection);
         logger.info("order_tail read data timeuse:{}", System.currentTimeMillis() - start);
@@ -686,10 +689,10 @@ public class CaipiaoService {
             String c3 = b1.substring(2,3) + b2.substring(2,3) + b3.substring(2,3) + b4.substring(2,3);
             String c4 = b1.substring(3,4) + b2.substring(3,4) + b3.substring(3,4) + b4.substring(3,4);
             logger.info("algorithm01 第{}期C: c1:{} c2:{} c3:{} c4:{}", currNo, c1, c2, c3, c4);
-            JSONArray d1Array = orderTailCalculate(1, c1, 30000, collection);
-            JSONArray d2Array = orderTailCalculate(2, c2, 30000, collection);
-            JSONArray d3Array = orderTailCalculate(3, c3, 30000, collection);
-            JSONArray d4Array = orderTailCalculate(4, c4, 30000, collection);
+            JSONArray d1Array = orderTailCalculate(1, null, c1, 30000, collection);
+            JSONArray d2Array = orderTailCalculate(2, null, c2, 30000, collection);
+            JSONArray d3Array = orderTailCalculate(3, null, c3, 30000, collection);
+            JSONArray d4Array = orderTailCalculate(4, null, c4, 30000, collection);
 
             String d1 = "x";
             String d2 = "x";
@@ -783,10 +786,10 @@ public class CaipiaoService {
             String c3 = b1.substring(2,3) + b2.substring(2,3) + b3.substring(2,3) + b4.substring(2,3);
             String c4 = b1.substring(3,4) + b2.substring(3,4) + b3.substring(3,4) + b4.substring(3,4);
             logger.info("algorithm01 第{}期C: c1:{} c2:{} c3:{} c4:{}", currNo, c1, c2, c3, c4);
-            JSONArray d1Array = orderTailCalculate(0, c1, 30000, "pl5");
-            JSONArray d2Array = orderTailCalculate(1, c2, 30000, "pl5");
-            JSONArray d3Array = orderTailCalculate(2, c3, 30000, "pl5");
-            JSONArray d4Array = orderTailCalculate(3, c4, 30000, "pl5");
+            JSONArray d1Array = orderTailCalculate(0, null, c1, 30000, "pl5");
+            JSONArray d2Array = orderTailCalculate(1, null, c2, 30000, "pl5");
+            JSONArray d3Array = orderTailCalculate(2, null, c3, 30000, "pl5");
+            JSONArray d4Array = orderTailCalculate(3, null, c4, 30000, "pl5");
 
             String d1 = "x";
             String d2 = "x";
