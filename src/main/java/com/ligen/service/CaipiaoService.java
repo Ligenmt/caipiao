@@ -343,7 +343,6 @@ public class CaipiaoService {
         }
         while (code.toString().length() >= 4) {
             JSONArray calculatedArray = orderTailCalculate(index, no, code.toString(), count, "cqssc");
-            code = new StringBuilder();
             if (calculatedArray.size() > 0) {
                 String s = calculatedArray.getJSONArray(0).getJSONObject(0).getString("result");
                 code.append(s);
