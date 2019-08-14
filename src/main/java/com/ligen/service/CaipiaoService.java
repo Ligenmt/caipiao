@@ -332,7 +332,7 @@ public class CaipiaoService {
         String a3 = orderTailCalculateV2(3, no, startList, count);
         String a4 = orderTailCalculateV2(4, no, startList, count);
 
-        return "a1:" + a1 + " a2:" + a2 + " a3:" + a3 + " a4:" + a4;
+        return "<p>a1:" + a1 + " </p><p>a2:" + a2 + " </p><p>a3:" + a3 + " </p><p>a4:" + a4 + "</p>";
     }
 
     public String orderTailCalculateV2(int index, String no, List<JSONObject> startList, int count) {
@@ -352,7 +352,6 @@ public class CaipiaoService {
                 break;
             }
         }
-
         return code.toString();
     }
 
