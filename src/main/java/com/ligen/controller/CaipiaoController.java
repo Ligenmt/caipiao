@@ -160,8 +160,9 @@ public class CaipiaoController {
     @RequestMapping(value = "order_tail_v2", method = RequestMethod.POST)
     @ResponseBody
     public String orderTailV2Post(@RequestParam(value = "count") Integer count,
-                                  @RequestParam(value = "no") String no) {
-        String result = caipiaoService.orderTailV2(no, count);
+                                  @RequestParam(value = "no") String no,
+                                  @RequestParam(value = "collection") String collection) {
+        String result = caipiaoService.orderTailV2(no, count, collection);
         return result;
     }
 

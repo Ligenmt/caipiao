@@ -320,29 +320,29 @@ public class CaipiaoService {
         return html;
     }
 
-    public String orderTailV2(String no, int count) {
+    public String orderTailV2(String no, int count, String collection) {
 
         Query query = new Query();
         query.addCriteria(Criteria.where("no").lte(no));
         query.with(new Sort(Sort.Direction.DESC, "_id")).limit(4);
-        List<JSONObject> startList = mongoTemplate.find(query, JSONObject.class, "cqssc");
+        List<JSONObject> startList = mongoTemplate.find(query, JSONObject.class, collection);
         //千位
-        String a1 = orderTailCalculateV2(1, no, startList, count);
-        String a2 = orderTailCalculateV2(2, no, startList, count);
-        String a3 = orderTailCalculateV2(3, no, startList, count);
-        String a4 = orderTailCalculateV2(4, no, startList, count);
+        String a1 = orderTailCalculateV2(1, no, startList, count, collection);
+        String a2 = orderTailCalculateV2(2, no, startList, count, collection);
+        String a3 = orderTailCalculateV2(3, no, startList, count, collection);
+        String a4 = orderTailCalculateV2(4, no, startList, count, collection);
 
         return "<p>a1:" + a1 + " </p><p>a2:" + a2 + " </p><p>a3:" + a3 + " </p><p>a4:" + a4 + "</p>";
     }
 
-    public String orderTailCalculateV2(int index, String no, List<JSONObject> startList, int count) {
+    public String orderTailCalculateV2(int index, String no, List<JSONObject> startList, int count, String collection) {
         StringBuilder code = new StringBuilder();
         for (int i=0; i<4; i++) {
             String result = startList.get(i).getString("result").substring(index, index+1);
             code.append(result);
         }
         while (code.toString().length() >= 4) {
-            JSONArray calculatedArray = orderTailCalculate(index, no, code.toString(), count, "cqssc");
+            JSONArray calculatedArray = orderTailCalculate(index, no, code.toString(), count, collection);
             if (calculatedArray.size() > 0) {
                 String s = calculatedArray.getJSONArray(0).getJSONObject(0).getString("result");
                 code.append(s);
