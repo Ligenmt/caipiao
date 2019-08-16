@@ -341,7 +341,7 @@ public class CaipiaoService {
 //            String result = startList.get(i).getString("result").substring(index, index+1);
 //            code.append(result);
 //        }
-        while (code.toString().length() >= 4) {
+        while (true) {
             JSONArray calculatedArray = orderTailCalculate(index, no, code.toString(), count, collection);
             if (calculatedArray.size() > 0) {
                 String s = calculatedArray.getJSONArray(0).getJSONObject(0).getString("result");
