@@ -337,10 +337,10 @@ public class CaipiaoService {
 
     public String orderTailCalculateV2(int index, String no, List<JSONObject> startList, int count, String collection) {
         StringBuilder code = new StringBuilder();
-        for (int i=0; i<4; i++) {
-            String result = startList.get(i).getString("result").substring(index, index+1);
-            code.append(result);
-        }
+//        for (int i=0; i<4; i++) {
+//            String result = startList.get(i).getString("result").substring(index, index+1);
+//            code.append(result);
+//        }
         while (code.toString().length() >= 4) {
             JSONArray calculatedArray = orderTailCalculate(index, no, code.toString(), count, collection);
             if (calculatedArray.size() > 0) {
