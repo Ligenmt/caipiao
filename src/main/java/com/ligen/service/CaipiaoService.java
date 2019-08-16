@@ -341,6 +341,7 @@ public class CaipiaoService {
             String result = startList.get(i).getString("result").substring(index, index+1);
             code.append(result);
         }
+        logger.info("orderTailCalculateV2 index:{} startCode:{}", index, code);
         StringBuilder result = new StringBuilder();
         while (true) {
             JSONArray calculatedArray = orderTailCalculate(index, no, code.toString(), count, collection);
