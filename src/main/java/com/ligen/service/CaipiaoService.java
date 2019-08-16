@@ -351,6 +351,9 @@ public class CaipiaoService {
             code = new StringBuilder();
             for (int i=0; i<calculatedArray.size(); i++) {
                 code.append(calculatedArray.getJSONArray(i).getJSONObject(0).getString("result"));
+                if (i == 4) {
+                    break;
+                }
             }
             logger.info("orderTailCalculateV2 index:{}, result:{}, code:{}", index, result, code);
             if (calculatedArray.size() < 4) {
