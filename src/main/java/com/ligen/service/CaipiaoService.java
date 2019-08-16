@@ -344,9 +344,11 @@ public class CaipiaoService {
         StringBuilder result = new StringBuilder();
         while (true) {
             JSONArray calculatedArray = orderTailCalculate(index, no, code.toString(), count, collection);
+            code = new StringBuilder();
             if (calculatedArray.size() > 0) {
                 String s = calculatedArray.getJSONArray(0).getJSONObject(0).getString("result");
                 result.append(s);
+                code.append(s);
             }
             logger.info("orderTailCalculateV2 index:{}, code:{}", index, code);
             if (calculatedArray.size() < 4) {
