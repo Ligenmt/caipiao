@@ -337,22 +337,23 @@ public class CaipiaoService {
 
     public String orderTailCalculateV2(int index, String no, List<JSONObject> startList, int count, String collection) {
         StringBuilder code = new StringBuilder();
-//        for (int i=0; i<4; i++) {
-//            String result = startList.get(i).getString("result").substring(index, index+1);
-//            code.append(result);
-//        }
+        for (int i=0; i<4; i++) {
+            String result = startList.get(i).getString("result").substring(index, index+1);
+            code.append(result);
+        }
+        StringBuilder result = new StringBuilder();
         while (true) {
             JSONArray calculatedArray = orderTailCalculate(index, no, code.toString(), count, collection);
             if (calculatedArray.size() > 0) {
                 String s = calculatedArray.getJSONArray(0).getJSONObject(0).getString("result");
-                code.append(s);
+                result.append(s);
             }
             logger.info("orderTailCalculateV2 index:{}, code:{}", index, code);
             if (calculatedArray.size() < 4) {
                 break;
             }
         }
-        return code.toString();
+        return result.toString();
     }
 
     public JSONArray orderTailCalculate(int index, String no, String code, Integer count, String collection) {
