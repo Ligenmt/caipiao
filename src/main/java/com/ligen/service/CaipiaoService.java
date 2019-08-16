@@ -326,6 +326,7 @@ public class CaipiaoService {
         query.addCriteria(Criteria.where("no").lte(no));
         query.with(new Sort(Sort.Direction.DESC, "_id")).limit(4);
         List<JSONObject> startList = mongoTemplate.find(query, JSONObject.class, collection);
+        logger.info("orderTailCalculateV2 data:{}", startList);
         //千位
         String a1 = orderTailCalculateV2(1, no, startList, count, collection);
         String a2 = orderTailCalculateV2(2, no, startList, count, collection);
