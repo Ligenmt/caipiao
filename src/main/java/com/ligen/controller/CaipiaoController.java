@@ -192,6 +192,17 @@ public class CaipiaoController {
         return result;
     }
 
+    @RequestMapping(value = "api/not_same", method = RequestMethod.POST)
+    @ResponseBody
+    public String apiNotSamePost(@RequestBody String body) {
+        JSONObject params = JSON.parseObject(body);
+        String no = params.getString("no");
+        Integer m = params.getInteger("m");
+        String collection = params.getString("collection");
+        String result = caipiaoService.notSame(no, m, collection);
+        return result;
+    }
+
     @RequestMapping(value = "not_same_plus", method = RequestMethod.GET)
     public String notSamePlusGet() {
         return "not_same_plus";
