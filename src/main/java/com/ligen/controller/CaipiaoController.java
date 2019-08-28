@@ -1,16 +1,15 @@
 package com.ligen.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ligen.service.CaipiaoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -218,6 +217,28 @@ public class CaipiaoController {
         return sb.toString();
     }
 
+    @RequestMapping(value = "api/not_same_plus", method = RequestMethod.POST)
+    @ResponseBody
+    public String apiNotSamePlusPost(@RequestBody String body) {
+        JSONObject params = JSON.parseObject(body);
+        String no = params.getString("no");
+        Integer m = params.getInteger("m");
+        Integer index = params.getInteger("index");
+        String collection = params.getString("collection");
+        JSONObject result = caipiaoService.notSamePlus(no, m, index, collection);
+        int d = result.getIntValue("d");
+        List<JSONObject> cqssc = (List<JSONObject>) result.get("list");
+        String lastRepeatHtml = result.getString("lastRepeatHtml");
+        StringBuilder sb = new StringBuilder();
+        sb.append("<p>位置").append(index).append("  d:").append(d).append(" m:").append(m).append("</p>");
+        for (int i=(d-1); i<cqssc.size()-d; i+=d) {
+            sb.append("<p>").append("no:").append(cqssc.get(i).getString("no")).append("  res:").append(cqssc.get(i).getString("result")).append("</p>");
+        }
+        sb.append("<p>m+1位：</p>");
+        sb.append(lastRepeatHtml);
+        return sb.toString();
+    }
+
     @RequestMapping(value = "not_same_v3", method = RequestMethod.GET)
     public String notSameV3Get() {
         return "not_same_v3";
@@ -227,6 +248,16 @@ public class CaipiaoController {
     @ResponseBody
     public String notSameV3Post(@RequestParam(value = "no") String no,
                               @RequestParam(value = "count") Integer count) {
+        String sb = caipiaoService.notSameV3(no, count);
+        return sb;
+    }
+
+    @RequestMapping(value = "api/not_same_v3", method = RequestMethod.POST)
+    @ResponseBody
+    public String apiNotSameV3Post(@RequestBody String body) {
+        JSONObject params = JSON.parseObject(body);
+        String no = params.getString("no");
+        int count = params.getIntValue("count");
         String sb = caipiaoService.notSameV3(no, count);
         return sb;
     }
@@ -253,6 +284,15 @@ public class CaipiaoController {
         return caipiaoService.algorithm01(no, count, "xywfc");
     }
 
+    @RequestMapping(value = "api/algorithm01_xywfc", method = RequestMethod.POST)
+    @ResponseBody
+    public String apiAlgorithm01XywfcPost(@RequestBody String body) {
+        JSONObject params = JSON.parseObject(body);
+        String no = params.getString("no");
+        int count = params.getIntValue("count");
+        return caipiaoService.algorithm01(no, count, "xywfc");
+    }
+
     @RequestMapping(value = "algorithm01_pl5", method = RequestMethod.GET)
     public String algorithm01Pl5Get() {
         return "algorithm01_pl5";
@@ -275,6 +315,15 @@ public class CaipiaoController {
         return caipiaoService.algorithm01(no, count, "pl5");
     }
 
+    @RequestMapping(value = "api/algorithm01_pl5", method = RequestMethod.POST)
+    @ResponseBody
+    public String apiAlgorithm01Pl52Post(@RequestBody String body) {
+        JSONObject params = JSON.parseObject(body);
+        String no = params.getString("no");
+        int count = params.getIntValue("count");
+        return caipiaoService.algorithm01(no, count, "pl5");
+    }
+
     @RequestMapping(value = "abxxn", method = RequestMethod.GET)
     public String abxxnGet() {
         return "abxxn";
@@ -283,6 +332,16 @@ public class CaipiaoController {
     @RequestMapping(value = "abxxn", method = RequestMethod.POST)
     @ResponseBody
     public String abxxnPost(@RequestParam(value = "code") String code, @RequestParam(value = "count") int count) {
+        String abxxn = caipiaoService.abxxn(code, count);
+        return abxxn;
+    }
+
+    @RequestMapping(value = "api/abxxn", method = RequestMethod.POST)
+    @ResponseBody
+    public String apiabxxnPost(@RequestBody String body) {
+        JSONObject params = JSON.parseObject(body);
+        String code = params.getString("code");
+        int count = params.getIntValue("count");
         String abxxn = caipiaoService.abxxn(code, count);
         return abxxn;
     }
@@ -299,6 +358,16 @@ public class CaipiaoController {
         return abxxn2;
     }
 
+    @RequestMapping(value = "api/abxxn2", method = RequestMethod.POST)
+    @ResponseBody
+    public String apiAbxxn2Post(@RequestBody String body) {
+        logger.info("api/abxxn2, {}", body);
+        JSONObject params = JSON.parseObject(body);
+        String code = params.getString("code");
+        String abxxn2 = caipiaoService.abxxn2(code);
+        return abxxn2;
+    }
+
     @RequestMapping(value = "abxxnv2", method = RequestMethod.GET)
     public String abxxnV2Get() {
         return "abxxnv2";
@@ -307,6 +376,17 @@ public class CaipiaoController {
     @RequestMapping(value = "abxxnv2", method = RequestMethod.POST)
     @ResponseBody
     public String abxxnV2Post(@RequestParam(value = "no") String no, @RequestParam(value = "code") String code, @RequestParam(value = "count") int count) {
+        String abxxn = caipiaoService.abxxnV2(no, code, count);
+        return abxxn;
+    }
+
+    @RequestMapping(value = "api/abxxnv2", method = RequestMethod.POST)
+    @ResponseBody
+    public String apiAbxxnV2Post(@RequestBody String body) {
+        JSONObject params = JSON.parseObject(body);
+        String no = params.getString("no");
+        String code = params.getString("code");
+        int count = params.getIntValue("count");
         String abxxn = caipiaoService.abxxnV2(no, code, count);
         return abxxn;
     }
