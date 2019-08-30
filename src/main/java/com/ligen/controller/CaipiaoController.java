@@ -347,14 +347,21 @@ public class CaipiaoController {
         return abxxn;
     }
 
-    @RequestMapping(value = "api/abxxn", method = RequestMethod.POST)
+    @RequestMapping(value = "api/abxxn", method = RequestMethod.POST, produces = {"application/json"})
     @ResponseBody
-    public String apiabxxnPost(@RequestBody String body) {
+    public JSONArray apiabxxnPost(@RequestBody String body) {
         JSONObject params = JSON.parseObject(body);
         String code = params.getString("code");
         int count = params.getIntValue("count");
-        String abxxn = caipiaoService.abxxn(code, count);
-        return abxxn;
+        JSONArray array = caipiaoService.abxxnApi(code, count);
+        return array;
+    }
+
+    @RequestMapping(value = "api/abxxn/filt", method = RequestMethod.POST, produces = {"application/json"})
+    @ResponseBody
+    public JSONArray apiabxxnFiltPost(@RequestBody String body) {
+        JSONObject params = JSON.parseObject(body);
+        return caipiaoService.abxxnApiFilt(params.getJSONArray("filterArray"));
     }
 
     @RequestMapping(value = "abxxn2", method = RequestMethod.GET)

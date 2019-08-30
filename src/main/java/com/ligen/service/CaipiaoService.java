@@ -852,6 +852,29 @@ public class CaipiaoService {
 
         String html = abxxnRender(resultArray12, resultArray13, resultArray14, resultArray23, resultArray24, resultArray34);
         return html;
+    }
+
+    public JSONArray abxxnApi(String code, int count) {
+
+        Query query = new Query();
+        query.fields().include("no").include("result");
+        query.with(new Sort(Sort.Direction.DESC, "no")).limit(10000);
+        List<JSONObject> cqsscList = mongoTemplate.find(query, JSONObject.class, "cqssc");
+
+        JSONArray resultArray12 = abxxnCalculate(1, 2, code, count, cqsscList);
+        JSONArray resultArray13 = abxxnCalculate(1, 3, code, count, cqsscList);
+        JSONArray resultArray14 = abxxnCalculate(1, 4, code, count, cqsscList);
+        JSONArray resultArray23 = abxxnCalculate(2, 3, code, count, cqsscList);
+        JSONArray resultArray24 = abxxnCalculate(2, 4, code, count, cqsscList);
+        JSONArray resultArray34 = abxxnCalculate(3, 4, code, count, cqsscList);
+        JSONArray result = new JSONArray();
+        result.add(resultArray12);
+        result.add(resultArray13);
+        result.add(resultArray14);
+        result.add(resultArray23);
+        result.add(resultArray24);
+        result.add(resultArray34);
+        return result;
 
     }
 
@@ -1044,5 +1067,32 @@ public class CaipiaoService {
             }
         }
         return sb.toString();
+    }
+
+    public JSONArray abxxnApiFilt(JSONArray filterArray) {
+
+        //从0000-9999
+        DecimalFormat df = new DecimalFormat("0000");
+        JSONArray handledNumbers = new JSONArray(10000);
+        for (int i=0; i<10000; i++) {
+            handledNumbers.add(df.format(i));
+        }
+
+        for (int i=0; i<filterArray.size(); i++) {
+            JSONObject input = filterArray.getJSONObject(i);
+            int a = input.getIntValue("a");
+            int b = input.getIntValue("b");
+            String result = input.getString("result");
+            char[] resultChars = result.toCharArray();
+            for (int j=handledNumbers.size()-1; j>=0; j--) {
+                String number = handledNumbers.getString(j);
+                char[] numberChars = number.toCharArray();
+                if (numberChars[a-1] == resultChars[a] && numberChars[b-1] == resultChars[b]) {
+                    handledNumbers.remove(j);
+                }
+            }
+        }
+
+        return handledNumbers;
     }
 }
