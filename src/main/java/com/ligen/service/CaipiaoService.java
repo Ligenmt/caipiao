@@ -968,10 +968,11 @@ public class CaipiaoService {
             String bb = result.substring(indexB, indexB + 1);
             if (a.equals(aa) && b.equals(bb)) {
                 logger.info("{} {} code:{}, no:{}, result:{}", indexA, indexB, code, no, result);
-                currentCount++;
                 resultArray.add(new JSONObject()
                         .fluentPut("no", cqsscList.get(j-1).getString("no"))
-                        .fluentPut("result", cqsscList.get(j-1).getString("result")));
+                        .fluentPut("result", cqsscList.get(j-1).getString("result"))
+                        .fluentPut("index", String.format("%03d", currentCount)));
+                currentCount++;
             }
             if (count <= currentCount) {
                 break;
