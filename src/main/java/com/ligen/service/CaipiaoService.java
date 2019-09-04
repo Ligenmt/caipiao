@@ -1055,18 +1055,31 @@ public class CaipiaoService {
         List<JSONObject> cqsscList = mongoTemplate.find(query, JSONObject.class, "cqssc");
 
         StringBuilder sb = new StringBuilder();
+        int sum1 = 0;
+        int sum2 = 0;
+        int sum3 = 0;
+        int sum4 = 0;
         for (int i=1; i<cqsscList.size(); i++) {
             String result = cqsscList.get(i).getString("result");
             if (result.endsWith(code)) {
                 JSONObject output = cqsscList.get(i-1);
+                String result1 = output.getString("result");
+                sum1 += Integer.valueOf(result1.substring(1, 2));
+                sum2 += Integer.valueOf(result1.substring(2, 3));
+                sum3 += Integer.valueOf(result1.substring(3, 4));
+                sum4 += Integer.valueOf(result1.substring(4, 5));
                 sb.append("<p>")
                         .append("期号:")
                         .append(output.getString("no"))
                         .append("   号码：")
-                        .append(output.getString("result"))
+                        .append(result1)
                         .append("</p>");
             }
         }
+        sb.append("<p>").append("位置1和:").append(sum1).append("</p>");
+        sb.append("<p>").append("位置2和:").append(sum2).append("</p>");
+        sb.append("<p>").append("位置3和:").append(sum3).append("</p>");
+        sb.append("<p>").append("位置4和:").append(sum4).append("</p>");
         return sb.toString();
     }
 
