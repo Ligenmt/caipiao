@@ -32,7 +32,6 @@ public class CaipiaoApplication {
 		//config.setMaxAge(3600)
 		//Enabling CORS for the whole application
 		source.registerCorsConfiguration("/**", config);
-		System.out.println("CorsFilter");
 		return new CorsFilter(source);
 	}
 
