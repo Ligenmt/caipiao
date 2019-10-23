@@ -1059,6 +1059,7 @@ public class CaipiaoService {
         int sum2 = 0;
         int sum3 = 0;
         int sum4 = 0;
+        StringBuilder suffixResult = new StringBuilder();
         for (int i=1; i<cqsscList.size(); i++) {
             String result = cqsscList.get(i).getString("result");
             if (result.endsWith(code)) {
@@ -1074,8 +1075,10 @@ public class CaipiaoService {
                         .append("   号码：")
                         .append(result1)
                         .append("</p>");
+                suffixResult.append(result1.substring(1)).append(" ");
             }
         }
+        sb.append("<p>").append(suffixResult.toString()).append("</p>");
         sb.append("<p>").append("位置1和:").append(sum1).append("</p>");
         sb.append("<p>").append("位置2和:").append(sum2).append("</p>");
         sb.append("<p>").append("位置3和:").append(sum3).append("</p>");
