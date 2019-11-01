@@ -184,6 +184,7 @@ public class CaipiaoController {
     }
 
     @RequestMapping(value = "qishu_interval_iteration", method = RequestMethod.POST)
+    @ResponseBody
     public String qishuIntervalIterationPost(@RequestParam(value = "interval") int interval,
                                              @RequestParam(value = "qishu") String qishu) {
         String result = caipiaoService.qishuIntervalIteration(interval, qishu);
