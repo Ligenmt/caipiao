@@ -437,21 +437,7 @@ public class CaipiaoService {
      */
     public String qishuInterval(int interval, String qishu) {
 
-//        MongoCollection<Document> cqssc = mongoTemplate.getCollection("cqssc");
-//        FindIterable<Document> findIterable = cqssc.find(new Document("", ""));
-//        MongoCursor<Document> iterator = findIterable.iterator();
-
-        Query query = new Query();
-        query.addCriteria(Criteria.where("no").is(qishu));
-        if (!mongoTemplate.exists(query, "cqssc")) {
-            return "";
-        }
-        int totalCount = interval * 51;
-        query = new Query();
-        query.addCriteria(Criteria.where("no").lte(qishu));
-        query.fields().include("no").include("result");
-        query.with(new Sort(Sort.Direction.DESC, "no")).limit(totalCount);
-        List<JSONObject> cqssc = mongoTemplate.find(query, JSONObject.class, "cqssc");
+        List<JSONObject> cqssc = qishuIntervalCalculate(interval, qishu);
 
         StringBuilder sb = new StringBuilder();
         sb.append("<p>").append(cqssc.get(0).getString("no")).append(" ").append(cqssc.get(0).getString("result")).append("</p>");
@@ -467,6 +453,78 @@ public class CaipiaoService {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * 以qishuInterval为基础 输入期号及该期号码，然后从输出结果中取第一个输出做新的输入（期号不变），一直迭代 直到每个位置的数都取出来 最后得到每个位置的输出序列
+     * @param interval
+     * @param qishu
+     * @return
+     */
+    public String qishuIntervalIteration(int interval, String qishu) {
+
+        JSONArray indexArray = new JSONArray();
+        indexArray
+                .fluentAdd(new JSONArray(10))
+                .fluentAdd(new JSONArray(10))
+                .fluentAdd(new JSONArray(10))
+                .fluentAdd(new JSONArray(10));
+
+        int count = 0;
+        while (true) {
+            count += 1;
+            List<JSONObject> cqssc = qishuIntervalCalculate(interval, qishu);
+            //找到第一期
+            String result = cqssc.get(1).getString("result").substring(1);
+            logger.info("qishuIntervalIteration count:{}, interval:{}, result:{}", interval, count, result);
+            if (!indexArray.getJSONArray(0).contains(result.charAt(0))) {
+                indexArray.getJSONArray(0).add(result.charAt(0));
+            }
+            if (!indexArray.getJSONArray(1).contains(result.charAt(1))) {
+                indexArray.getJSONArray(1).add(result.charAt(1));
+            }
+            if (!indexArray.getJSONArray(2).contains(result.charAt(2))) {
+                indexArray.getJSONArray(2).add(result.charAt(2));
+            }
+            if (!indexArray.getJSONArray(3).contains(result.charAt(3))) {
+                indexArray.getJSONArray(3).add(result.charAt(3));
+            }
+
+            if (indexArray.getJSONArray(0).size() == 10 && indexArray.getJSONArray(1).size() == 10 && indexArray.getJSONArray(2).size() == 10 && indexArray.getJSONArray(3).size() == 10) {
+                break;
+            }
+            if (count >= 100) {
+                logger.info("too many circulate");
+                break;
+            }
+            interval = Integer.valueOf(result);
+        }
+        StringBuilder sb = new StringBuilder();
+
+        for (int i=0; i<4; i++) {
+            sb.append("<p>位置").append(i).append("数据序列: ");
+            JSONArray jsonArray = indexArray.getJSONArray(i);
+            for (int j=0; j<jsonArray.size(); j++) {
+                sb.append(jsonArray.get(j));
+            }
+            sb.append("</p>");
+        }
+        return sb.toString();
+    }
+
+    public List<JSONObject> qishuIntervalCalculate(int interval, String qishu) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("no").is(qishu));
+        if (!mongoTemplate.exists(query, "cqssc")) {
+            return new ArrayList<>();
+        }
+        int totalCount = interval * 51;
+        query = new Query();
+        query.addCriteria(Criteria.where("no").lte(qishu));
+        query.fields().include("no").include("result");
+        query.with(new Sort(Sort.Direction.DESC, "no")).limit(totalCount);
+        List<JSONObject> cqssc = mongoTemplate.find(query, JSONObject.class, "cqssc");
+        return cqssc;
     }
 
     /**
@@ -1109,4 +1167,6 @@ public class CaipiaoService {
 
         return handledNumbers;
     }
+
+
 }

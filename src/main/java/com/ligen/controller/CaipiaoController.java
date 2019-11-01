@@ -178,6 +178,18 @@ public class CaipiaoController {
         return result;
     }
 
+    @RequestMapping(value = "qishu_interval_iteration", method = RequestMethod.GET)
+    public String qishuIntervalIterationGet() {
+        return "qishu_interval_iteration";
+    }
+
+    @RequestMapping(value = "qishu_interval_iteration", method = RequestMethod.POST)
+    public String qishuIntervalIterationPost(@RequestParam(value = "interval") int interval,
+                                             @RequestParam(value = "qishu") String qishu) {
+        String result = caipiaoService.qishuIntervalIteration(interval, qishu);
+        return result;
+    }
+
     @RequestMapping(value = "not_same", method = RequestMethod.GET)
     public String notSameGet() {
         return "not_same";
