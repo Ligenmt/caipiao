@@ -437,7 +437,7 @@ public class CaipiaoService {
      */
     public String qishuInterval(int interval, String qishu) {
 
-        List<JSONObject> cqssc = qishuIntervalCalculate(interval, qishu);
+        List<JSONObject> cqssc = qishuIntervalCalculate(interval, qishu, 51);
 
         StringBuilder sb = new StringBuilder();
         sb.append("<p>").append(cqssc.get(0).getString("no")).append(" ").append(cqssc.get(0).getString("result")).append("</p>");
@@ -469,13 +469,13 @@ public class CaipiaoService {
                 .fluentAdd(new JSONArray(10))
                 .fluentAdd(new JSONArray(10))
                 .fluentAdd(new JSONArray(10));
-
+        interval = 1;
         int count = 0;
         while (true) {
             count += 1;
-            List<JSONObject> cqssc = qishuIntervalCalculate(interval, qishu);
+            List<JSONObject> cqssc = qishuIntervalCalculate(interval, qishu, 2);
             //找到第一期
-            String result = cqssc.get(1).getString("result").substring(1);
+            String result = cqssc.get(interval).getString("result").substring(1);
             logger.info("qishuIntervalIteration count:{}, interval:{}, result:{}", interval, count, result);
             if (!indexArray.getJSONArray(0).contains(result.charAt(0))) {
                 indexArray.getJSONArray(0).add(result.charAt(0));
@@ -512,13 +512,13 @@ public class CaipiaoService {
         return sb.toString();
     }
 
-    public List<JSONObject> qishuIntervalCalculate(int interval, String qishu) {
+    public List<JSONObject> qishuIntervalCalculate(int interval, String qishu, int times) {
         Query query = new Query();
         query.addCriteria(Criteria.where("no").is(qishu));
         if (!mongoTemplate.exists(query, "cqssc")) {
             return new ArrayList<>();
         }
-        int totalCount = interval * 51;
+        int totalCount = interval * times;
         query = new Query();
         query.addCriteria(Criteria.where("no").lte(qishu));
         query.fields().include("no").include("result");
