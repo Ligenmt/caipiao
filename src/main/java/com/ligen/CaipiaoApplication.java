@@ -20,9 +20,7 @@ public class CaipiaoApplication {
 		config.setAllowCredentials(true);
 		//允许向该服务器提交请求的URI,*表示全部
 		config.addAllowedOrigin("*");
-		//允许访问的头信息,*表示全部
 		config.addAllowedHeader("*");
-		//允许的method
 		config.addAllowedMethod("OPTIONS");
 		config.addAllowedMethod("HEAD");
 		config.addAllowedMethod("GET");
