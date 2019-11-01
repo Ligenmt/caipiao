@@ -469,7 +469,6 @@ public class CaipiaoService {
                 .fluentAdd(new JSONArray(10))
                 .fluentAdd(new JSONArray(10))
                 .fluentAdd(new JSONArray(10));
-        interval = 1;
         int count = 0;
         while (true) {
             count += 1;
