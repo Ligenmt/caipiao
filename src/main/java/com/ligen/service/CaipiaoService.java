@@ -665,6 +665,7 @@ public class CaipiaoService {
     }
 
     public String calculateNotSameV3(String no, int index) {
+        logger.info("calculateNotSameV3 thisNo:{}, index:{} ", no, 2);
         StringBuilder sb = new StringBuilder();
         int m = 1;
         JSONObject numberMap = new JSONObject();
