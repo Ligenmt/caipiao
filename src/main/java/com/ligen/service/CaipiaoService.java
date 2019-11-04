@@ -502,12 +502,12 @@ public class CaipiaoService {
         sb.append("<h2>查询期数:").append(qishu).append("</h2>");
         sb.append("<h2>间隔:").append(interval).append("</h2>");
         for (int i=0; i<4; i++) {
-            sb.append("<h2>位置").append(i).append("数据序列: ");
+            sb.append("<h1>位置").append(i).append("数据序列: ");
             JSONArray jsonArray = indexArray.getJSONArray(i);
             for (int j=0; j<jsonArray.size(); j++) {
                 sb.append(jsonArray.get(j));
             }
-            sb.append("</h2>");
+            sb.append("</h1>");
         }
         return sb.toString();
     }
