@@ -492,7 +492,7 @@ public class CaipiaoService {
             if (indexArray.getJSONArray(0).size() == 10 && indexArray.getJSONArray(1).size() == 10 && indexArray.getJSONArray(2).size() == 10 && indexArray.getJSONArray(3).size() == 10) {
                 break;
             }
-            if (count >= 200) {
+            if (count >= 150) {
                 logger.info("too many circulate");
                 break;
             }
@@ -501,6 +501,7 @@ public class CaipiaoService {
         for (int i=0; i<4; i++) {
             JSONArray jsonArray = indexArray.getJSONArray(i);
             if (jsonArray.size() == 9) {
+                logger.info("size9:{}", jsonArray);
                 String str = "0123456789";
                 for (int j=0; j<9; j++) {
                     String value = jsonArray.getString(j);
