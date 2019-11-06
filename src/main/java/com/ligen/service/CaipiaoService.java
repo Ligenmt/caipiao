@@ -492,12 +492,28 @@ public class CaipiaoService {
             if (indexArray.getJSONArray(0).size() == 10 && indexArray.getJSONArray(1).size() == 10 && indexArray.getJSONArray(2).size() == 10 && indexArray.getJSONArray(3).size() == 10) {
                 break;
             }
-            if (count >= 100) {
+            if (count >= 200) {
                 logger.info("too many circulate");
                 break;
             }
             interval = Integer.valueOf(result);
         }
+        for (int i=0; i<4; i++) {
+            JSONArray jsonArray = indexArray.getJSONArray(i);
+            if (jsonArray.size() == 9) {
+                String str = "0123456789";
+                for (int j=0; j<9; j++) {
+                    String value = jsonArray.getString(j);
+                    str = str.replace(str, value);
+                }
+                jsonArray.add(str);
+            } else if (jsonArray.size() < 9) {
+                for (int j=jsonArray.size(); j<10; j++) {
+                    jsonArray.add("x");
+                }
+            }
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append("<h2>查询期数:").append(qishu).append("</h2>");
         sb.append("<h2>间隔:").append(firstInterval).append("</h2>");
