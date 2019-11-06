@@ -505,7 +505,7 @@ public class CaipiaoService {
                 String str = "0123456789";
                 for (int j=0; j<9; j++) {
                     String value = jsonArray.getString(j);
-                    str = str.replace(str, value);
+                    str = str.replace(value, "");
                     logger.info("size9 remove:{}, left:{}", value, str);
                 }
                 jsonArray.add(str);
@@ -1189,6 +1189,5 @@ public class CaipiaoService {
 
         return handledNumbers;
     }
-
 
 }
