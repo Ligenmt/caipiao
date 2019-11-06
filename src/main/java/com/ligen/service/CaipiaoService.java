@@ -506,6 +506,7 @@ public class CaipiaoService {
                 for (int j=0; j<9; j++) {
                     String value = jsonArray.getString(j);
                     str = str.replace(str, value);
+                    logger.info("size9 remove:{}, left:{}", value, str);
                 }
                 jsonArray.add(str);
             } else if (jsonArray.size() < 9) {
