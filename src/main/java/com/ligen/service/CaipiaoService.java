@@ -462,7 +462,7 @@ public class CaipiaoService {
      * @return
      */
     public String qishuIntervalIteration(int interval, String qishu) {
-
+        String firstInterval = interval + "";
         JSONArray indexArray = new JSONArray();
         indexArray
                 .fluentAdd(new JSONArray(10))
@@ -492,16 +492,35 @@ public class CaipiaoService {
             if (indexArray.getJSONArray(0).size() == 10 && indexArray.getJSONArray(1).size() == 10 && indexArray.getJSONArray(2).size() == 10 && indexArray.getJSONArray(3).size() == 10) {
                 break;
             }
-            if (count >= 100) {
+            if (count >= 150) {
                 logger.info("too many circulate");
                 break;
             }
             interval = Integer.valueOf(result);
         }
-        StringBuilder sb = new StringBuilder();
-
         for (int i=0; i<4; i++) {
-            sb.append("<p>位置").append(i).append("数据序列: ");
+            JSONArray jsonArray = indexArray.getJSONArray(i);
+            if (jsonArray.size() == 9) {
+                logger.info("size9:{}", jsonArray);
+                String str = "0123456789";
+                for (int j=0; j<9; j++) {
+                    String value = jsonArray.getString(j);
+                    str = str.replace(value, "");
+                    logger.info("size9 remove:{}, left:{}", value, str);
+                }
+                jsonArray.add(str);
+            } else if (jsonArray.size() < 9) {
+                for (int j=jsonArray.size(); j<10; j++) {
+                    jsonArray.add("x");
+                }
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("<h2>查询期数:").append(qishu).append("</h2>");
+        sb.append("<h2>间隔:").append(firstInterval).append("</h2>");
+        for (int i=0; i<4; i++) {
+            sb.append("<p style=\"font-size: 50px;\">位置").append(i).append("数据序列: ");
             JSONArray jsonArray = indexArray.getJSONArray(i);
             for (int j=0; j<jsonArray.size(); j++) {
                 sb.append(jsonArray.get(j));
@@ -1170,6 +1189,5 @@ public class CaipiaoService {
 
         return handledNumbers;
     }
-
 
 }
