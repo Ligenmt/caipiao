@@ -24,10 +24,14 @@ public class CaipiaoTask {
 
     @Autowired
     MongoTemplate mongoTemplate;
-    private static String ynwfcUrl = "https://34589.com/api/lottery/ynwfc/history?page=0&size=50";
-    private static String ynffcUrl = "https://34589.com/api/lottery/ynffc/history?page=0&size=50";
-    private static String cqsscUrl = "https://34589.com/api/lottery/cqssc/history?page=0&size=50";
-    private static String xywfcUrl = "https://34589.com/api/lottery/xywfc/history?page=0&size=50";
+//    private static String ynwfcUrl = "https://34589.com/api/lottery/ynwfc/history?page=0&size=50";
+//    private static String ynffcUrl = "https://34589.com/api/lottery/ynffc/history?page=0&size=50";
+//    private static String cqsscUrl = "https://34589.com/api/lottery/cqssc/history?page=0&size=50";
+//    private static String xywfcUrl = "https://34589.com/api/lottery/xywfc/history?page=0&size=50";
+    private static String ynwfcUrl = "https://5038166.com/api/lottery/ynwfc/history?page=0&size=50";
+    private static String ynffcUrl = "https://5038166.com/api/lottery/ynffc/history?page=0&size=50";
+    private static String cqsscUrl = "https://5038166.com/api/lottery/cqssc/history?page=0&size=50";
+    private static String xywfcUrl = "https://5038166.com/api/lottery/xywfc/history?page=0&size=50";
     private static String pl5Url = "http://www.17500.cn/getData/p5.TXT";
 
     @Scheduled(cron="0 0 10 * * ?")
