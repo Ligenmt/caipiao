@@ -29,7 +29,7 @@ public class Md5Service {
             String numbers = data.getString("result");
             String dataNo = data.getString("no");
             String md5 = MD5(numbers.substring(1));
-            sb.append("<p>期数:").append(dataNo).append("   号码:").append(numbers).append("   32位md5:").append(md5.substring(0, 4)).append("   16位md5").append(md5.substring(8, 24).substring(0, 4)).append("</p>");
+            sb.append("<p>期数:").append(dataNo).append("   号码:").append(numbers).append("   32位: ").append(md5.substring(0, 4)).append("   16位: ").append(md5.substring(8, 24).substring(0, 4)).append("</p>");
         }
         return sb.toString();
     }
