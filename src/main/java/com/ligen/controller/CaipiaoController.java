@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ligen.service.CaipiaoService;
+import com.ligen.service.Md5Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,24 @@ public class CaipiaoController {
 
     @Autowired
     CaipiaoService caipiaoService;
+
+    @Autowired
+    Md5Service md5Service;
+
+    @RequestMapping(value = "md5", method = RequestMethod.GET)
+    public String md5Get() {
+        return "md5";
+    }
+
+    @RequestMapping(value = "md5", method = RequestMethod.POST)
+    @ResponseBody
+    public String md5Post(HttpServletRequest request) {
+        int count = Integer.parseInt(request.getParameter("count")); //过滤期数
+        String no = request.getParameter("no");  //待过滤号码
+        String result = md5Service.md5(no, count);
+
+        return result;
+    }
 
     @RequestMapping(value = "pl5", method = RequestMethod.GET)
     public String pailie5Get() {
