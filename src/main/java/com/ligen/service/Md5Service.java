@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class Md5Service {
@@ -29,7 +31,15 @@ public class Md5Service {
             String numbers = data.getString("result");
             String dataNo = data.getString("no");
             String md5 = MD5(numbers.substring(1));
-            sb.append("<p>期数:").append(dataNo).append("   号码:").append(numbers).append("   32位: ").append(md5.substring(0, 4)).append("   16位: ").append(md5.substring(8, 24).substring(0, 4)).append("</p>");
+            Pattern p = Pattern.compile("[^0-9]");
+            Matcher m32 = p.matcher(md5);
+            String md532Num = m32.replaceAll("").trim();
+            String md516 = md5.substring(8, 24);
+
+            Matcher m16 = p.matcher(md516);
+            String md516Num = m16.replaceAll("").trim();
+
+            sb.append("<p>期数:").append(dataNo).append("   号码:").append(numbers).append("   32位: ").append(md532Num.substring(0, 4)).append("   16位: ").append(md516Num.substring(0, 4)).append("</p>");
         }
         return sb.toString();
     }
