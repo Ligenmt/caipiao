@@ -34,6 +34,11 @@ public class CaipiaoController {
         return "md5";
     }
 
+    @RequestMapping(value = "md52num", method = RequestMethod.GET)
+    public String md52numGet() {
+        return "md52num";
+    }
+
     @RequestMapping(value = "md5", method = RequestMethod.POST)
     @ResponseBody
     public String md5Post(HttpServletRequest request) {
