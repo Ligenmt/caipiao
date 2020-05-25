@@ -9,6 +9,7 @@
     <title>md5转数字</title>
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="/js/md5.js"></script>
     <style>
     body {
         box-sizing: border-box;
@@ -86,6 +87,9 @@
                 <button id="btn-login" type="button" class="btn btn-primary btn-lg" onclick="onClick()" style="margin-top: 5px">
                     提交
                 </button>
+                <button id="btn-login" type="button" class="btn btn-primary btn-lg" onclick="onClear()" style="margin-top: 5px">
+                    清空
+                </button>
             </form>
         </div>
     </div>
@@ -93,6 +97,8 @@
 <script>
 function onClick(){
     let value = document.getElementById("no").value
+    console.log(value)
+    value = hex_md5(value);
     console.log(value)
     if (value.length !== 32) {
         alert("不是32位")
@@ -139,7 +145,10 @@ function onClick(){
     document.getElementById("result").value=r1 + r2 + r3 + r4;
 }
 
-
+function onClear() {
+    document.getElementById("no").value = ""
+    document.getElementById("result").value = ""
+}
 </script>
 </body>
 </html>
