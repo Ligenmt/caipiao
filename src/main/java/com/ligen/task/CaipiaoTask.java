@@ -178,17 +178,17 @@ public class CaipiaoTask {
         builder.connectTimeout(1, TimeUnit.MINUTES);
         builder.readTimeout(1, TimeUnit.MINUTES);
         //设置代理,需要替换
-        if (ProxyTask.proxyList != null && ProxyTask.proxyList.size() > 0) {
-            Random r = new Random();
-            int i = r.nextInt(ProxyTask.proxyList.size());
-            String host = ProxyTask.proxyList.getJSONObject(i).getString("host");
-            int port = ProxyTask.proxyList.getJSONObject(i).getIntValue("port");
-            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
-            builder.proxy(proxy);
-            logger.info("proxy client: {}:{}", host, port);
-        } else {
-            logger.info("unproxy client");
-        }
+//        if (ProxyTask.proxyList != null && ProxyTask.proxyList.size() > 0) {
+//            Random r = new Random();
+//            int i = r.nextInt(ProxyTask.proxyList.size());
+//            String host = ProxyTask.proxyList.getJSONObject(i).getString("host");
+//            int port = ProxyTask.proxyList.getJSONObject(i).getIntValue("port");
+//            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
+//            builder.proxy(proxy);
+//            logger.info("proxy client: {}:{}", host, port);
+//        } else {
+//            logger.info("unproxy client");
+//        }
 
         //cookie管理器
 //        CookieManager cookieManager = new CookieManager();
