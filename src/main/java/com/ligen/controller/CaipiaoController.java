@@ -211,7 +211,21 @@ public class CaipiaoController {
     @ResponseBody
     public String qishuIntervalIterationPost(@RequestParam(value = "interval") int interval,
                                              @RequestParam(value = "qishu") String qishu) {
-        String result = caipiaoService.qishuIntervalIteration(interval, qishu);
+        String result = caipiaoService.qishuIntervalIteration(interval, qishu, "cqssc");
+        return result;
+    }
+
+
+    @RequestMapping(value = "qishu_interval_iteration_xywfc", method = RequestMethod.GET)
+    public String qishuIntervalIterationXywfcGet() {
+        return "qishu_interval_iteration_xywfc";
+    }
+
+    @RequestMapping(value = "qishu_interval_iteration_xywfc", method = RequestMethod.POST)
+    @ResponseBody
+    public String qishuIntervalIterationXywfcPost(@RequestParam(value = "interval") int interval,
+                                             @RequestParam(value = "qishu") String qishu) {
+        String result = caipiaoService.qishuIntervalIteration(interval, qishu, "xywfc");
         return result;
     }
 
@@ -296,9 +310,25 @@ public class CaipiaoController {
     @ResponseBody
     public String notSameV3Post(@RequestParam(value = "no") String no,
                               @RequestParam(value = "count") Integer count) {
-        String sb = caipiaoService.notSameV3(no, count);
+        String sb = caipiaoService.notSameV3(no, count, "cqssc");
         return sb;
     }
+
+    @RequestMapping(value = "not_same_v3_xywfc", method = RequestMethod.GET)
+    public String notSameV3Getxywfc() {
+        return "not_same_v3_xywfc";
+    }
+
+    @RequestMapping(value = "not_same_v3_xywfc", method = RequestMethod.POST)
+    @ResponseBody
+    public String notSameV3Postxywfc(@RequestParam(value = "no") String no,
+                                @RequestParam(value = "count") Integer count) {
+        String sb = caipiaoService.notSameV3(no, count, "xywfc");
+        return sb;
+    }
+
+
+
 
     @RequestMapping(value = "api/not_same_v3", method = RequestMethod.POST)
     @ResponseBody
@@ -306,7 +336,7 @@ public class CaipiaoController {
         JSONObject params = JSON.parseObject(body);
         String no = params.getString("no");
         int count = params.getIntValue("count");
-        String sb = caipiaoService.notSameV3(no, count);
+        String sb = caipiaoService.notSameV3(no, count, "cqssc");
         return sb;
     }
 

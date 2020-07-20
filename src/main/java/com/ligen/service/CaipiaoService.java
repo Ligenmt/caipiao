@@ -437,7 +437,7 @@ public class CaipiaoService {
      */
     public String qishuInterval(int interval, String qishu) {
 
-        List<JSONObject> cqssc = qishuIntervalCalculate(interval, qishu, 51);
+        List<JSONObject> cqssc = qishuIntervalCalculate(interval, qishu, 51, "cqssc");
 
         StringBuilder sb = new StringBuilder();
         sb.append("<p>").append(cqssc.get(0).getString("no")).append(" ").append(cqssc.get(0).getString("result")).append("</p>");
@@ -461,7 +461,7 @@ public class CaipiaoService {
      * @param qishu
      * @return
      */
-    public String qishuIntervalIteration(int interval, String qishu) {
+    public String qishuIntervalIteration(int interval, String qishu, String collection) {
         String firstInterval = interval + "";
         JSONArray indexArray = new JSONArray();
         indexArray
@@ -472,7 +472,7 @@ public class CaipiaoService {
         int count = 0;
         while (true) {
             count += 1;
-            List<JSONObject> cqssc = qishuIntervalCalculate(interval, qishu, 2);
+            List<JSONObject> cqssc = qishuIntervalCalculate(interval, qishu, 2, collection);
             //找到第一期
             String result = cqssc.get(interval).getString("result").substring(1);
             logger.info("qishuIntervalIteration count:{}, interval:{}, result:{}", interval, count, result);
@@ -530,10 +530,10 @@ public class CaipiaoService {
         return sb.toString();
     }
 
-    public List<JSONObject> qishuIntervalCalculate(int interval, String qishu, int times) {
+    public List<JSONObject> qishuIntervalCalculate(int interval, String qishu, int times, String collection) {
         Query query = new Query();
         query.addCriteria(Criteria.where("no").is(qishu));
-        if (!mongoTemplate.exists(query, "cqssc")) {
+        if (!mongoTemplate.exists(query, collection)) {
             return new ArrayList<>();
         }
         int totalCount = interval * times;
@@ -541,7 +541,7 @@ public class CaipiaoService {
         query.addCriteria(Criteria.where("no").lte(qishu));
         query.fields().include("no").include("result");
         query.with(new Sort(Sort.Direction.DESC, "no")).limit(totalCount);
-        List<JSONObject> cqssc = mongoTemplate.find(query, JSONObject.class, "cqssc");
+        List<JSONObject> cqssc = mongoTemplate.find(query, JSONObject.class, collection);
         return cqssc;
     }
 
@@ -646,22 +646,22 @@ public class CaipiaoService {
         return result;
     }
 
-    public String notSameV3(String no, int count) {
+    public String notSameV3(String no, int count, String collection) {
 
         Query query = new Query();
         query.addCriteria(Criteria.where("no").lte(no));
         query.with(new Sort(Sort.Direction.DESC, "no")).limit(count + 1);
-        List<JSONObject> list = mongoTemplate.find(query, JSONObject.class, "cqssc");
+        List<JSONObject> list = mongoTemplate.find(query, JSONObject.class, collection);
         StringBuilder sb = new StringBuilder();
         for (int i=0; i<count; i++) {
             String thisNo = list.get(i).getString("no");
-            String code2 = calculateNotSameV3(thisNo, 2);
+            String code2 = calculateNotSameV3(thisNo, 2, collection);
             String code2Last = code2.substring(code2.length()-1);
-            String code3 = calculateNotSameV3(thisNo, 3);
+            String code3 = calculateNotSameV3(thisNo, 3, collection);
             String code3Last = code3.substring(code3.length()-1);
-            String code4 = calculateNotSameV3(thisNo, 4);
+            String code4 = calculateNotSameV3(thisNo, 4, collection);
             String code4Last = code4.substring(code4.length()-1);
-            String code5 = calculateNotSameV3(thisNo, 5);
+            String code5 = calculateNotSameV3(thisNo, 5, collection);
             String code5Last = code5.substring(code5.length()-1);
             String code = code2Last + code3Last + code4Last + code5Last;
             String lastResult = list.get(i+1).getString("result");
@@ -683,13 +683,13 @@ public class CaipiaoService {
         return sb.toString();
     }
 
-    public String calculateNotSameV3(String no, int index) {
+    public String calculateNotSameV3(String no, int index, String collection) {
         logger.info("calculateNotSameV3 thisNo:{}, index:{} ", no, index);
         StringBuilder sb = new StringBuilder();
         int m = 1;
         JSONObject numberMap = new JSONObject();
         while (true) {
-            JSONObject notSamePlus = notSamePlus(no, m, index, "cqssc");
+            JSONObject notSamePlus = notSamePlus(no, m, index, collection);
             List<JSONObject> list = (List<JSONObject>) notSamePlus.get("list");
             int d = notSamePlus.getIntValue("d");
             String first = list.get(d-1).getString("result");
