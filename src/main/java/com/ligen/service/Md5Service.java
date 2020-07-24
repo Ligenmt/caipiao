@@ -44,7 +44,7 @@ public class Md5Service {
         return sb.toString();
     }
 
-    private static String MD5(String sourceStr) {
+    public static String MD5(String sourceStr) {
         String result = "";//通过result返回结果值
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");//1.初始化MessageDigest信息摘要对象,并指定为MD5不分大小写都可以
