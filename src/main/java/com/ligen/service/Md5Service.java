@@ -70,4 +70,97 @@ public class Md5Service {
         }
         return result;//返回结果
     }
+
+    public static String md5tonum(String source) {
+
+        String md5 = MD5(source);
+//        let v1 = value.slice(0, 8)
+//        let v2 = value.slice(8, 16)
+//        let v3 = value.slice(16, 24)
+//        let v4 = value.slice(24, 32)
+        String v1 = md5.substring(0, 8);
+        String v2 = md5.substring(8, 16);
+        String v3 = md5.substring(16, 24);
+        String v4 = md5.substring(24, 32);
+//        console.log(v1, v2, v3, v4)
+//        v1 = v1.replace(/[^0-9]/ig,"")
+//        v2 = v2.replace(/[^0-9]/ig,"")
+//        v3 = v3.replace(/[^0-9]/ig,"")
+//        v4 = v4.replace(/[^0-9]/ig,"")
+
+        String regEx="[^0-9]";
+        Pattern p = Pattern.compile(regEx);
+
+        Matcher m1 = p.matcher(v1);
+        Matcher m2 = p.matcher(v2);
+        Matcher m3 = p.matcher(v3);
+        Matcher m4 = p.matcher(v4);
+        v1 = m1.replaceAll("");
+        v2 = m2.replaceAll("");
+        v3 = m3.replaceAll("");
+        v4 = m4.replaceAll("");
+
+        int t1 = 0;
+        int t2 = 0;
+        int t3 = 0;
+        int t4 = 0;
+//        console.log(v1, v2, v3, v4)
+//        let t1 = 0
+//        let t2 = 0
+//        let t3 = 0
+//        let t4 = 0
+//        for (let i=0; i<v1.length; i++) {
+//            let v = parseInt(v1.charAt(i))
+//            t1 += v
+//        }
+        for (int i=0; i<v1.length(); i++) {
+            int v = Integer.parseInt(String.valueOf(v1.charAt(i)));
+            t1 += v;
+        }
+//        for (let i=0; i<v2.length; i++) {
+//            let v = parseInt(v2.charAt(i))
+//            t2 += v
+//        }
+        for (int i=0; i<v2.length(); i++) {
+            int v = Integer.parseInt(String.valueOf(v2.charAt(i)));
+            t2 += v;
+        }
+//        for (let i=0; i<v3.length; i++) {
+//            let v = parseInt(v3.charAt(i))
+//            t3 += v
+//        }
+        for (int i=0; i<v3.length(); i++) {
+            int v = Integer.parseInt(String.valueOf(v3.charAt(i)));
+            t3 += v;
+        }
+//        for (let i=0; i<v4.length; i++) {
+//            let v = parseInt(v4.charAt(i))
+//            t4 += v
+//        }
+        for (int i=0; i<v4.length(); i++) {
+            int v = Integer.parseInt(String.valueOf(v4.charAt(i)));
+            t4 += v;
+        }
+//        let r1 = t1 + ""
+//        let r2 = t2 + ""
+//        let r3 = t3 + ""
+//        let r4 = t4 + ""
+        String r1 = t1 + "";
+        String r2 = t2 + "";
+        String r3 = t3 + "";
+        String r4 = t4 + "";
+//        r1 = r1.charAt(r1.length - 1)
+//        r2 = r2.charAt(r2.length - 1)
+//        r3 = r3.charAt(r3.length - 1)
+//        r4 = r4.charAt(r4.length - 1)
+
+        r1 = r1.charAt(r1.length() - 1) + "";
+        r2 = r2.charAt(r2.length() - 1) + "";
+        r3 = r3.charAt(r3.length() - 1) + "";
+        r4 = r4.charAt(r4.length() - 1) + "";
+//        document.getElementById("result").value=r1 + r2 + r3 + r4;
+        return r1 + r2 + r3 + r4;
+    }
+
+
 }

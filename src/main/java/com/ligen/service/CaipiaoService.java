@@ -667,16 +667,19 @@ public class CaipiaoService {
             String lastResult = list.get(i+1).getString("result");
             String lastNo = list.get(i+1).getString("no");
             logger.info("{}期计算结果:{}, {}期号码:{}", thisNo, code, lastNo, lastResult);
-            sb.append("<p>位置2数序列:").append(code2).append("</p>");
-            sb.append("<p>位置3数序列:").append(code3).append("</p>");
-            sb.append("<p>位置4数序列:").append(code4).append("</p>");
-            sb.append("<p>位置5数序列:").append(code5).append("</p>");
+            String md52 = Md5Service.md5tonum(code2);
+            String md53 = Md5Service.md5tonum(code3);
+            String md54 = Md5Service.md5tonum(code4);
+            String md55 = Md5Service.md5tonum(code5);
+            sb.append("<p>位置2数序列:").append(code2).append("  md5转换:").append(md52).append("</p>");
+            sb.append("<p>位置3数序列:").append(code3).append("  md5转换:").append(md53).append("</p>");
+            sb.append("<p>位置4数序列:").append(code4).append("  md5转换:").append(md54).append("</p>");
+            sb.append("<p>位置5数序列:").append(code5).append("  md5转换:").append(md55).append("</p>");
             sb.append("<p>").append(thisNo).append("期计算结果:").append(code).append(", ").append(lastNo).append("期号码:").append(lastResult).append("</p>");
-
+            sb.append("<p>");
             for (int j=0; j<10; j++) {
                 String colj = code2.substring(j, j+1) + code3.substring(j, j+1) + code4.substring(j, j+1) + code5.substring(j, j+1);
-                sb.append("<p>");
-                sb.append(colj).append(" ").append(Md5Service.MD5(colj)).append("</p>");
+                sb.append(colj).append(" ");
             }
             sb.append("</p>");
         }
