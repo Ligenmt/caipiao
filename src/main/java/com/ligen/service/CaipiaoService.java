@@ -461,7 +461,7 @@ public class CaipiaoService {
      * @param qishu
      * @return
      */
-    public String qishuIntervalIteration(int interval, String qishu, String collection) {
+    public JSONArray qishuIntervalIteration(int interval, String qishu, String collection) {
         String firstInterval = interval + "";
         JSONArray indexArray = new JSONArray();
         indexArray
@@ -515,7 +515,10 @@ public class CaipiaoService {
                 }
             }
         }
+        return indexArray;
+    }
 
+    public String qishuIntervalIterationRender(String qishu, String firstInterval, JSONArray indexArray) {
         StringBuilder sb = new StringBuilder();
         sb.append("<h2>查询期数:").append(qishu).append("</h2>");
         sb.append("<h2>间隔:").append(firstInterval).append("</h2>");
@@ -1198,4 +1201,58 @@ public class CaipiaoService {
         return handledNumbers;
     }
 
+    public String compose01(String no, int count) {
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("no").lte(no));
+        query.fields().include("no").include("result");
+        query.with(new Sort(Sort.Direction.DESC, "no")).limit(count);
+        List<JSONObject> xywfcList = mongoTemplate.find(query, JSONObject.class, "xywfc");
+        StringBuilder sb = new StringBuilder();
+        for (int j=0; j<xywfcList.size(); j++) {
+            JSONObject first = xywfcList.get(j);
+            String firstRes = first.getString("result");
+            no = first.getString("no");
+            int interval = Integer.valueOf(firstRes.substring(1));
+            JSONArray aArray = qishuIntervalIteration(interval, no, "xywfc");
+            StringBuilder sba = new StringBuilder();
+            for (int i=0; i<4; i++) {
+                JSONArray jsonArray = aArray.getJSONArray(i);
+                StringBuilder ssb = new StringBuilder();
+                for (int k=0; k<jsonArray.size(); k++) {
+                    ssb.append(jsonArray.get(k));
+                }
+                String num = ssb.toString();
+                String md5 = Md5Service.md5tonum(num);
+                int v1 = Integer.parseInt(String.valueOf(md5.charAt(0)));
+                int v2 = Integer.parseInt(String.valueOf(md5.charAt(1)));
+                int v3 = Integer.parseInt(String.valueOf(md5.charAt(2)));
+                int v4 = Integer.parseInt(String.valueOf(md5.charAt(3)));
+                //求和取个位
+                int v = (v1 + v2 + v3 + v4) % 10;
+                sba.append(v);
+            }
+            String abcd = sba.toString();
+            String abcd2 = Md5Service.md5tonum(abcd);
+            String abcd3 = Md5Service.md5tonum(abcd2);
+
+            String e = no + firstRes.substring(1);
+            String efgh = Md5Service.md5tonum(e);
+            String efgh2 = Md5Service.md5tonum(efgh);
+            String efgh3 = Md5Service.md5tonum(efgh2);
+
+            String i = no + firstRes;
+            String ijkl = Md5Service.md5tonum(i);
+            String ijkl2 = Md5Service.md5tonum(ijkl);
+            String ijkl3 = Md5Service.md5tonum(ijkl2);
+
+
+            sb.append("<p>").append(no).append(":");
+            sb.append(abcd).append(" ").append(abcd2).append(" ").append(abcd3).append(" ");
+            sb.append(efgh).append(" ").append(efgh2).append(" ").append(efgh3).append(" ");
+            sb.append(ijkl).append(" ").append(ijkl2).append(" ").append(ijkl3).append(" ");
+            sb.append("</p>");
+        }
+        return sb.toString();
+    }
 }

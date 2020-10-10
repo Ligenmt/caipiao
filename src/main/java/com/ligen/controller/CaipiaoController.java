@@ -211,7 +211,8 @@ public class CaipiaoController {
     @ResponseBody
     public String qishuIntervalIterationPost(@RequestParam(value = "interval") int interval,
                                              @RequestParam(value = "qishu") String qishu) {
-        String result = caipiaoService.qishuIntervalIteration(interval, qishu, "cqssc");
+        JSONArray indexArray = caipiaoService.qishuIntervalIteration(interval, qishu, "cqssc");
+        String result = caipiaoService.qishuIntervalIterationRender(qishu, interval + "", indexArray);
         return result;
     }
 
@@ -225,7 +226,8 @@ public class CaipiaoController {
     @ResponseBody
     public String qishuIntervalIterationXywfcPost(@RequestParam(value = "interval") int interval,
                                              @RequestParam(value = "qishu") String qishu) {
-        String result = caipiaoService.qishuIntervalIteration(interval, qishu, "xywfc");
+        JSONArray indexArray = caipiaoService.qishuIntervalIteration(interval, qishu, "xywfc");
+        String result = caipiaoService.qishuIntervalIterationRender(qishu, interval + "", indexArray);
         return result;
     }
 
@@ -474,5 +476,17 @@ public class CaipiaoController {
         int count = params.getIntValue("count");
         String abxxn = caipiaoService.abxxnV2(no, code, count);
         return abxxn;
+    }
+
+    @RequestMapping(value = "compose01", method = RequestMethod.GET)
+    public String compose01Get() {
+        return "compose01";
+    }
+
+    @RequestMapping(value = "compose01", method = RequestMethod.POST)
+    @ResponseBody
+    public String apiCompose01Post(@RequestParam(value = "no") String no, @RequestParam(value = "count") int count) {
+        String result = caipiaoService.compose01(no, count);
+        return result;
     }
 }
