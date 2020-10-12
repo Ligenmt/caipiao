@@ -1248,9 +1248,9 @@ public class CaipiaoService {
 
 
             sb.append("<p>").append(no).append("期结果: ").append(firstRes);
-            sb.append(abcd).append("|").append(abcd2).append("|").append(abcd3).append("|");
-            sb.append(efgh).append("|").append(efgh2).append("|").append(efgh3).append("|");
-            sb.append(ijkl).append("|").append(ijkl2).append("|").append(ijkl3).append("|");
+            sb.append(" |").append(abcd).append("|").append(abcd2).append("|").append(abcd3).append("|");
+            sb.append(" |").append(efgh).append("|").append(efgh2).append("|").append(efgh3).append("|");
+            sb.append(" |").append(ijkl).append("|").append(ijkl2).append("|").append(ijkl3).append("|");
             sb.append("</p>");
         }
         return sb.toString();
