@@ -1201,7 +1201,7 @@ public class CaipiaoService {
         return handledNumbers;
     }
 
-    public String compose01(String no, int count) {
+    public String compose01(String no, int count, int circle) {
 
         Query query = new Query();
         query.addCriteria(Criteria.where("no").lte(no));
@@ -1232,25 +1232,57 @@ public class CaipiaoService {
                 int v = (v1 + v2 + v3 + v4) % 10;
                 sba.append(v);
             }
+            List<String> abcdList = new ArrayList<>(circle + 1);
+            List<String> efghList = new ArrayList<>(circle + 1);
+            List<String> ijklList = new ArrayList<>(circle + 1);
+
             String abcd = sba.toString();
-            String abcd2 = Md5Service.md5tonum(abcd);
-            String abcd3 = Md5Service.md5tonum(abcd2);
+            abcdList.add(abcd);
+            for (int i=0; i<circle; i++) {
+                String abcd2 = Md5Service.md5tonum(abcd);
+                abcdList.add(abcd2);
+                abcd = abcd2;
+            }
+//            String abcd2 = Md5Service.md5tonum(abcd);
+//            String abcd3 = Md5Service.md5tonum(abcd2);
 
             String e = no + firstRes.substring(1);
             String efgh = Md5Service.md5tonum(e);
-            String efgh2 = Md5Service.md5tonum(efgh);
-            String efgh3 = Md5Service.md5tonum(efgh2);
+            efghList.add(efgh);
+            for (int i=0; i<circle; i++) {
+                String efgh2 = Md5Service.md5tonum(efgh);
+                efghList.add(efgh2);
+                efgh = efgh2;
+            }
+//            String efgh2 = Md5Service.md5tonum(efgh);
+//            String efgh3 = Md5Service.md5tonum(efgh2);
 
-            String i = no + firstRes;
-            String ijkl = Md5Service.md5tonum(i);
-            String ijkl2 = Md5Service.md5tonum(ijkl);
-            String ijkl3 = Md5Service.md5tonum(ijkl2);
+            String i3 = no + firstRes;
+            String ijkl = Md5Service.md5tonum(i3);
+//            String ijkl2 = Md5Service.md5tonum(ijkl);
+//            String ijkl3 = Md5Service.md5tonum(ijkl2);
+            ijklList.add(ijkl);
+            for (int i=0; i<circle; i++) {
+                String ijkl2 = Md5Service.md5tonum(ijkl);
+                ijklList.add(ijkl2);
+                ijkl = ijkl2;
+            }
 
+            sb.append("<p>").append(no).append("期结果: ").append(firstRes).append(" ");
+            for (int i=0; i<abcdList.size(); i++) {
+                sb.append(abcdList.get(i)).append(" ");
+            }
 
-            sb.append("<p>").append(no).append("期结果: ").append(firstRes).append(" |");
-            sb.append(abcd).append("|").append(abcd2).append("|").append(abcd3).append("|");
-            sb.append(efgh).append("|").append(efgh2).append("|").append(efgh3).append("|");
-            sb.append(ijkl).append("|").append(ijkl2).append("|").append(ijkl3).append("|");
+            for (int i=0; i<efghList.size(); i++) {
+                sb.append(efghList.get(i)).append(" ");
+            }
+
+            for (int i=0; i<ijklList.size(); i++) {
+                sb.append(ijklList.get(i)).append(" ");
+            }
+//            sb.append(abcd).append(" ").append(abcd2).append(" ").append(abcd3).append(" ");
+//            sb.append(efgh).append(" ").append(efgh2).append(" ").append(efgh3).append(" ");
+//            sb.append(ijkl).append(" ").append(ijkl2).append(" ").append(ijkl3).append(" ");
             sb.append("</p>");
         }
         return sb.toString();

@@ -485,8 +485,8 @@ public class CaipiaoController {
 
     @RequestMapping(value = "compose01", method = RequestMethod.POST)
     @ResponseBody
-    public String apiCompose01Post(@RequestParam(value = "no") String no, @RequestParam(value = "count") int count) {
-        String result = caipiaoService.compose01(no, count);
+    public String apiCompose01Post(@RequestParam(value = "no") String no, @RequestParam(value = "count") int count, @RequestParam(required = false, defaultValue = "3", value = "circle") int circle) {
+        String result = caipiaoService.compose01(no, count, circle);
         return result;
     }
 }
