@@ -1268,15 +1268,15 @@ public class CaipiaoService {
                 ijkl = ijkl2;
             }
 
-            sb.append("<p>").append(no).append("期结果: ").append(firstRes).append(" ");
+            sb.append("<p>").append(no).append("期结果: ").append(firstRes).append(" abcd:");
             for (int i=0; i<abcdList.size(); i++) {
                 sb.append(abcdList.get(i)).append(" ");
             }
-
+            sb.append(" efgh: ");
             for (int i=0; i<efghList.size(); i++) {
                 sb.append(efghList.get(i)).append(" ");
             }
-
+            sb.append(" ijkl: ");
             for (int i=0; i<ijklList.size(); i++) {
                 sb.append(ijklList.get(i)).append(" ");
             }
