@@ -1280,11 +1280,127 @@ public class CaipiaoService {
             for (int i=0; i<ijklList.size(); i++) {
                 sb.append(ijklList.get(i)).append(" ");
             }
-//            sb.append(abcd).append(" ").append(abcd2).append(" ").append(abcd3).append(" ");
-//            sb.append(efgh).append(" ").append(efgh2).append(" ").append(efgh3).append(" ");
-//            sb.append(ijkl).append(" ").append(ijkl2).append(" ").append(ijkl3).append(" ");
             sb.append("</p>");
         }
         return sb.toString();
+    }
+
+
+    public String compose01Xj(String no, int count, int circle) {
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("no").lte(no));
+        query.fields().include("no").include("result");
+        query.with(new Sort(Sort.Direction.DESC, "no")).limit(count);
+        List<JSONObject> xywfcList = mongoTemplate.find(query, JSONObject.class, "xjssc");
+        StringBuilder sb = new StringBuilder();
+        for (int j=0; j<xywfcList.size(); j++) {
+            JSONObject first = xywfcList.get(j);
+            String firstRes = first.getString("result");
+            no = first.getString("no");
+            int interval = Integer.valueOf(firstRes.substring(1));
+            JSONArray aArray = qishuIntervalIteration(interval, no, "xjssc");
+            StringBuilder sba = new StringBuilder();
+            for (int i=0; i<4; i++) {
+                JSONArray jsonArray = aArray.getJSONArray(i);
+                StringBuilder ssb = new StringBuilder();
+                for (int k=0; k<jsonArray.size(); k++) {
+                    ssb.append(jsonArray.get(k));
+                }
+                String num = ssb.toString();
+                String md5 = Md5Service.md5tonum(num);
+                int v1 = Integer.parseInt(String.valueOf(md5.charAt(0)));
+                int v2 = Integer.parseInt(String.valueOf(md5.charAt(1)));
+                int v3 = Integer.parseInt(String.valueOf(md5.charAt(2)));
+                int v4 = Integer.parseInt(String.valueOf(md5.charAt(3)));
+                //求和取个位
+                int v = (v1 + v2 + v3 + v4) % 10;
+                sba.append(v);
+            }
+            List<String> abcdList = new ArrayList<>(circle + 1);
+            List<String> efghList = new ArrayList<>(circle + 1);
+            List<String> ijklList = new ArrayList<>(circle + 1);
+
+            String abcd = sba.toString();
+            abcdList.add(abcd);
+            for (int i=0; i<circle; i++) {
+                String abcd2 = Md5Service.md5tonum(abcd);
+                abcdList.add(abcd2);
+                abcd = abcd2;
+            }
+//            String abcd2 = Md5Service.md5tonum(abcd);
+//            String abcd3 = Md5Service.md5tonum(abcd2);
+
+            String e = no + firstRes.substring(1);
+            String efgh = Md5Service.md5tonum(e);
+            efghList.add(efgh);
+            for (int i=0; i<circle; i++) {
+                String efgh2 = Md5Service.md5tonum(efgh);
+                efghList.add(efgh2);
+                efgh = efgh2;
+            }
+//            String efgh2 = Md5Service.md5tonum(efgh);
+//            String efgh3 = Md5Service.md5tonum(efgh2);
+
+            String i3 = no + firstRes;
+            String ijkl = Md5Service.md5tonum(i3);
+//            String ijkl2 = Md5Service.md5tonum(ijkl);
+//            String ijkl3 = Md5Service.md5tonum(ijkl2);
+            ijklList.add(ijkl);
+            for (int i=0; i<circle; i++) {
+                String ijkl2 = Md5Service.md5tonum(ijkl);
+                ijklList.add(ijkl2);
+                ijkl = ijkl2;
+            }
+
+            sb.append("<p>").append(no).append("期结果: ").append(firstRes).append(" <br>A:<br>");
+            for (int i=0; i<abcdList.size(); i++) {
+                sb.append(abcdList.get(i)).append(" ");
+            }
+            sb.append(" <br>B:<br> ");
+            for (int i=0; i<efghList.size(); i++) {
+                sb.append(efghList.get(i)).append(" ");
+            }
+            sb.append(" <br>C:<br> ");
+            for (int i=0; i<ijklList.size(); i++) {
+                sb.append(ijklList.get(i)).append(" ");
+            }
+            sb.append("</p>");
+        }
+        return sb.toString();
+    }
+
+    public String compose02(String number) {
+        String[] list = number.split(" ");
+        StringBuilder s1 = new StringBuilder();
+        StringBuilder s2 = new StringBuilder();
+        StringBuilder s3 = new StringBuilder();
+        StringBuilder s4 = new StringBuilder();
+        for (String l : list) {
+            s1.append(l, 0, 1);
+            s2.append(l, 1, 2);
+            s3.append(l, 2, 3);
+            s4.append(l, 3, 4);
+        }
+        String a = s1.toString();
+        String b = s2.toString();
+        String c = s3.toString();
+        String d = s4.toString();
+        JSONArray data = new JSONArray();
+        for (int i=0; i<list.length; i++) {
+            for (int j=0; j<list.length; j++) {
+                for (int k=0; k<list.length; k++) {
+                    for (int l=0; l<list.length; l++) {
+                        String s = String.valueOf(a.charAt(i)) + String.valueOf(b.charAt(j)) + String.valueOf(c.charAt(k)) + String.valueOf(d.charAt(l));
+                        data.add(s);
+                    }
+                }
+            }
+        }
+        StringBuilder res = new StringBuilder();
+        for (int i=0; i<data.size(); i++) {
+            res.append("<span>").append(data.get(i)).append("  ").append("</span>");
+        }
+        return res.toString();
     }
 }

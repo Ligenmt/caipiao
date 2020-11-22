@@ -489,4 +489,28 @@ public class CaipiaoController {
         String result = caipiaoService.compose01(no, count, circle);
         return result;
     }
+
+    @RequestMapping(value = "compose01xj", method = RequestMethod.GET)
+    public String compose01XJGet() {
+        return "compose01xj";
+    }
+
+    @RequestMapping(value = "compose01xj", method = RequestMethod.POST)
+    @ResponseBody
+    public String apiCompose01XJPost(@RequestParam(value = "no") String no, @RequestParam(value = "count") int count, @RequestParam(required = false, defaultValue = "3", value = "circle") int circle) {
+        String result = caipiaoService.compose01(no, count, circle);
+        return result;
+    }
+
+    @RequestMapping(value = "compose02", method = RequestMethod.GET)
+    public String compose02Get() {
+        return "compose02";
+    }
+
+    @RequestMapping(value = "compose02", method = RequestMethod.POST)
+    @ResponseBody
+    public String apiCompose02Post(@RequestParam(value = "number") String number) {
+        String result = caipiaoService.compose02(number);
+        return result;
+    }
 }

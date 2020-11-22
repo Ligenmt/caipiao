@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>组合查询01</title>
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+<!-- Custom styles for this template -->
+<div id="app">
+    <div class="main">
+        <h1 style="text-align: center">组合查询02</h1>
+        <div style="text-align: center" class="login_box">
+            <form role="form" action="/compose02" method="post">
+                <div class="form-group">
+                    <label for="number" class="control-label">多个四位数</label>
+                    <input id="number" type="text" name="number" class="form-control"
+                           placeholder="多个四位数">
+                </div>
+                <button id="btn-login" type="submit" class="btn btn-primary btn-lg" style="margin-top: 5px">
+                    提交
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    body {
+        box-sizing: border-box;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: #E0EEEE;
+        margin: 0;
+        display: block;
+    }
+
+    .login_box {
+        width: 580px;
+        height: 340px;
+        background: #fff;
+        position: absolute;
+        /*top: 50%;*/
+        top: 500px;
+        left: 50%;
+        margin: -170px 0 0 -190px;
+        border-radius: 5px;
+        box-shadow: 2px 2px 5px rgba(0,0,0,.1);
+    }
+
+    .login_box h3 {
+        max-width: 70%;
+        margin: 5px 28px;
+        display: block;
+        vertical-align: middle;
+        border: 0;
+        height: auto;
+    }
+
+    .login_box h5 {
+        max-width: 70%;
+        margin: 5px 28px;
+        margin-bottom: 20px;
+        display: block;
+        vertical-align: middle;
+        border: 0;
+        font-size: 12px;
+        color: #b5b9bc;
+        height: auto;
+    }
+
+    .login_box img {
+        max-width: 70%;
+        margin: 28px auto;
+        display: block;
+        vertical-align: middle;
+        border: 0;
+        height: auto;
+    }
+</style>
+</body>
+</html>

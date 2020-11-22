@@ -37,6 +37,7 @@ public class CaipiaoTask {
     private static String ynwfcUrl = "https://5038166.com/api/lottery/ynwfc/history?page=0&size=50";
     private static String ynffcUrl = "https://5038166.com/api/lottery/ynffc/history?page=0&size=50";
     private static String cqsscUrl = "https://5038166.com/api/lottery/cqssc/history?page=0&size=50";
+    private static String xjsscUrl = "https://5038166.com/api/lottery/xjssc/history?page=0&size=50";
     private static String xywfcUrl = "https://5038166.com/api/lottery/xywfc/history?page=0&size=50";
     private static String pl5Url = "http://www.17500.cn/getData/p5.TXT";
 
@@ -115,6 +116,26 @@ public class CaipiaoTask {
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("cqssc error");
+        }
+    }
+
+    @Scheduled(cron="0 0/5 * * * ? ")
+    public void 新疆时时彩() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            OkHttpClient client = createClient();
+            Request req = new Request.Builder()
+                    .url(xjsscUrl)
+                    .get()
+                    .build();
+            String str = client.newCall(req).execute().body().string();
+//            String str = HttpInstance.create().doGet(cqsscUrl, null, 10);
+            System.out.println(str);
+            saveData(str, "xjssc", sdf);
+            logger.info("xjssc updated");
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("xjssc error");
         }
     }
 
