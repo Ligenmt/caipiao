@@ -15,6 +15,8 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -1386,7 +1388,7 @@ public class CaipiaoService {
         String b = s2.toString();
         String c = s3.toString();
         String d = s4.toString();
-        JSONArray data = new JSONArray();
+        HashSet<String> data = new HashSet<>();
         for (int i=0; i<list.length; i++) {
             for (int j=0; j<list.length; j++) {
                 for (int k=0; k<list.length; k++) {
@@ -1398,8 +1400,9 @@ public class CaipiaoService {
             }
         }
         StringBuilder res = new StringBuilder();
-        for (int i=0; i<data.size(); i++) {
-            res.append("<span>").append(data.get(i)).append("  ").append("</span>");
+        Iterator<String> iterator = data.iterator();
+        while (iterator.hasNext()) {
+            res.append("<span>").append(iterator.next()).append("  ").append("</span>");
         }
         return res.toString();
     }
