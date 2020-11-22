@@ -231,6 +231,20 @@ public class CaipiaoController {
         return result;
     }
 
+    @RequestMapping(value = "qishu_interval_iteration_xjssc", method = RequestMethod.GET)
+    public String qishuIntervalIterationXjsscGet() {
+        return "qishu_interval_iteration_xjssc";
+    }
+
+    @RequestMapping(value = "qishu_interval_iteration_xjssc", method = RequestMethod.POST)
+    @ResponseBody
+    public String qishuIntervalIterationXjsscPost(@RequestParam(value = "interval") int interval,
+                                                  @RequestParam(value = "qishu") String qishu) {
+        JSONArray indexArray = caipiaoService.qishuIntervalIteration(interval, qishu, "xjssc");
+        String result = caipiaoService.qishuIntervalIterationRender(qishu, interval + "", indexArray);
+        return result;
+    }
+
     @RequestMapping(value = "not_same", method = RequestMethod.GET)
     public String notSameGet() {
         return "not_same";
@@ -498,7 +512,7 @@ public class CaipiaoController {
     @RequestMapping(value = "compose01xj", method = RequestMethod.POST)
     @ResponseBody
     public String apiCompose01XJPost(@RequestParam(value = "no") String no, @RequestParam(value = "count") int count, @RequestParam(required = false, defaultValue = "3", value = "circle") int circle) {
-        String result = caipiaoService.compose01(no, count, circle);
+        String result = caipiaoService.compose01Xj(no, count, circle);
         return result;
     }
 
