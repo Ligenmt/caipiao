@@ -1406,4 +1406,64 @@ public class CaipiaoService {
         }
         return res.toString();
     }
+
+    public String compose03(String number) {
+
+        String[] split = number.split(" ");
+
+        String results1000 = "xxxxxxxxxx";
+        String results100 = "xxxxxxxxxx";
+        String results10 = "xxxxxxxxxx";
+        String results1 = "xxxxxxxxxx";
+        for (int i=0; i < split.length-1; i++) {
+            String num = split[i];
+            String nextNum = split[i+1];
+            Integer integer1000 = Integer.valueOf(num.substring(0, 1));
+            Integer integer100 = Integer.valueOf(num.substring(1, 2));
+            Integer integer10 = Integer.valueOf(num.substring(2, 3));
+            Integer integer1 = Integer.valueOf(num.substring(3, 4));
+
+            Integer nextNumInteger1000 = Integer.valueOf(nextNum.substring(0, 1));
+            Integer nextNumInteger100 = Integer.valueOf(nextNum.substring(1, 2));
+            Integer nextNumInteger10 = Integer.valueOf(nextNum.substring(2, 3));
+            Integer nextNumInteger1 = Integer.valueOf(nextNum.substring(3, 4));
+
+            int sum1000 = integer1000 + nextNumInteger1000;
+            String sumStr1000 = sum1000 + "";
+            String last1000 = sumStr1000.substring(sumStr1000.length() - 1);
+            if (!results1000.contains(last1000)) {
+                results1000 = results1000.replaceFirst("x", last1000);
+            }
+
+            int sum100 = integer100 + nextNumInteger100;
+            String sumStr100 = sum100 + "";
+            String last100 = sumStr100.substring(sumStr100.length() - 1);
+            if (!results100.contains(last100)) {
+                results100 = results100.replaceFirst("x", last100);
+            }
+
+            int sum10 = integer10 + nextNumInteger10;
+            String sumStr10 = sum10 + "";
+            String last10 = sumStr10.substring(sumStr10.length() - 1);
+            if (!results10.contains(last10)) {
+                results10 = results10.replaceFirst("x", last10);
+            }
+
+            int sum1 = integer1 + nextNumInteger1;
+            String sumStr1 = sum1 + "";
+            String last1 = sumStr1.substring(sumStr1.length() - 1);
+            if (!results1.contains(last1)) {
+                results1 = results1.replaceFirst("x", last1);
+            }
+
+
+        }
+        StringBuilder res = new StringBuilder();
+        res.append("<span>千位：").append(results1000.toString())
+                .append("  <br>百位：").append(results100.toString())
+                .append("  <br>十位：").append(results10.toString())
+                .append("  <br>个位：").append(results1.toString())
+                .append("</span>");
+        return res.toString();
+    }
 }

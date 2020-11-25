@@ -99,25 +99,24 @@ public class CaipiaoTask {
         }
     }
 
-    @Scheduled(cron="0 0/5 * * * ? ")
-    public void 重庆时时彩() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            OkHttpClient client = createClient();
-            Request req = new Request.Builder()
-                    .url(cqsscUrl)
-                    .get()
-                    .build();
-            String str = client.newCall(req).execute().body().string();
-//            String str = HttpInstance.create().doGet(cqsscUrl, null, 10);
-            System.out.println(str);
-            saveData(str, "cqssc", sdf);
-            logger.info("cqssc updated");
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.info("cqssc error");
-        }
-    }
+//    @Scheduled(cron="0 0/5 * * * ? ")
+//    public void 重庆时时彩() {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        try {
+//            OkHttpClient client = createClient();
+//            Request req = new Request.Builder()
+//                    .url(cqsscUrl)
+//                    .get()
+//                    .build();
+//            String str = client.newCall(req).execute().body().string();
+//            System.out.println(str);
+//            saveData(str, "cqssc", sdf);
+//            logger.info("cqssc updated");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            logger.info("cqssc error");
+//        }
+//    }
 
     @Scheduled(cron="0 0/5 * * * ? ")
     public void 新疆时时彩() {

@@ -527,4 +527,16 @@ public class CaipiaoController {
         String result = caipiaoService.compose02(number);
         return result;
     }
+
+    @RequestMapping(value = "compose03", method = RequestMethod.GET)
+    public String compose03Get() {
+        return "compose03";
+    }
+
+    @RequestMapping(value = "compose03", method = RequestMethod.POST)
+    @ResponseBody
+    public String apiCompose03Post(@RequestParam(value = "number") String number) {
+        String result = caipiaoService.compose03(number);
+        return result;
+    }
 }
