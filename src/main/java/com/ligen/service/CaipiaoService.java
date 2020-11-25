@@ -1459,7 +1459,7 @@ public class CaipiaoService {
 
         }
         StringBuilder res = new StringBuilder();
-        res.append("<span>千位：").append(results1000.toString())
+        res.append("<span style=\"font-size: 22px;\">千位：").append(results1000.toString())
                 .append("  <br>百位：").append(results100.toString())
                 .append("  <br>十位：").append(results10.toString())
                 .append("  <br>个位：").append(results1.toString())
