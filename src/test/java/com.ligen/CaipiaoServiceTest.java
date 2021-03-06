@@ -1,4 +1,7 @@
-//package com.ligen;
+package com.ligen;
+
+import com.alibaba.fastjson.JSONObject;
+
 //
 //import com.ligen.service.CaipiaoService;
 //import org.junit.Test;
@@ -9,13 +12,7 @@
 //
 //@SpringBootTest
 //@RunWith(SpringRunner.class)
-//public class CaipiaoServiceTest {
-//
-//    @Autowired
-//    CaipiaoService caipiaoService;
-//
-//    @Test
-//    public void testCompose1() {
-//        caipiaoService.compose01("20200930140", 10);
-//    }
-//}
+public class CaipiaoServiceTest {
+
+
+}
