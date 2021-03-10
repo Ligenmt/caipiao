@@ -34,7 +34,7 @@ public class HszsService {
             sb.append("<p>")
                     .append("时间:").append(json.getString("_id"))
                     .append("  指数:").append(json.getString("index"))
-                    .append("  成交:").append(json.getString("volume"))
+                    .append("  成交:").append(json.getDoubleValue("volume") / 10000)
                     .append("</p>");
             log.info("i:{}, id:{}", i * interval, json.getString("_id"));
         }
